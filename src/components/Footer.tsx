@@ -22,6 +22,7 @@ const Footer: React.FC = () => {
           <a className="text-slate-400 hover:text-white transition-colors text-sm" href="/privacy-policy">Privacy Policy</a>
           <a className="text-slate-400 hover:text-white transition-colors text-sm" href="/terms-of-service">Terms of Service</a>
           <a className="text-slate-400 hover:text-white transition-colors text-sm" href="/sitemap">Sitemap</a>
+          <a className="text-slate-400 hover:text-white transition-colors text-sm" href="/admin/login">Admin Portal</a>
         </nav>
       </div>
       <div>
