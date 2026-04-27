@@ -1,0 +1,148 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Save, Image as ImageIcon } from 'lucide-react';
+
+const CreateBlog = () => {
+  const navigate = useNavigate();
+  const [title, setTitle] = useState('');
+  const [coverImage, setCoverImage] = useState('');
+  const [content, setContent] = useState('');
+  const [isPublished, setIsPublished] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    // Fetch user from local storage
+    const userStr = localStorage.getItem('adminUser');
+    const token = localStorage.getItem('adminToken');
+    
+    if (!userStr || !token) {
+      setError('You must be logged in to create a blog.');
+      setLoading(false);
+      return;
+    }
+    
+    const user = JSON.parse(userStr);
+
+    try {
+      const res = await fetch('http://localhost:5000/api/blogs', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // In a fully robust app, include Authorization header here:
+          // 'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          title,
+          content,
+          coverImage,
+          isPublished,
+          authorId: user.id
+        })
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Failed to create blog');
+      }
+
+      // Success, redirect to blogs list or dashboard
+      navigate('/admin');
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="max-w-4xl space-y-8 animate-in fade-in slide-in-from-bottom-4">
+      <div className="flex justify-between items-end">
+        <div>
+          <h1 className="text-3xl font-headline font-bold text-slate-800">Create New Blog Post</h1>
+          <p className="text-slate-500 mt-1">Write and publish new content for the public site.</p>
+        </div>
+      </div>
+
+      <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-sm overflow-hidden border-t-4 border-primary">
+        <div className="p-8 space-y-6">
+          {error && (
+            <div className="bg-red-50 text-red-600 px-4 py-3 rounded-md text-sm border border-red-200">
+              {error}
+            </div>
+          )}
+
+          <div>
+            <label className="block text-sm font-bold text-slate-700 mb-2">Post Title</label>
+            <input 
+              type="text" 
+              required
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="w-full border-gray-300 rounded-md shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 text-lg py-3" 
+              placeholder="e.g. How to Secure Your Corporate Campus" 
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-bold text-slate-700 mb-2">Cover Image URL (Optional)</label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <ImageIcon size={16} className="text-slate-400" />
+              </div>
+              <input 
+                type="url" 
+                value={coverImage}
+                onChange={(e) => setCoverImage(e.target.value)}
+                className="pl-10 w-full border-gray-300 rounded-md shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50" 
+                placeholder="https://example.com/image.jpg" 
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-bold text-slate-700 mb-2">Content Body</label>
+            <textarea 
+              required
+              rows={15}
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              className="w-full border-gray-300 rounded-md shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 font-medium text-slate-700" 
+              placeholder="Write your blog content here..." 
+            />
+          </div>
+
+          <div className="flex items-center gap-3 bg-slate-50 p-4 rounded-md border border-slate-200">
+            <input 
+              type="checkbox" 
+              id="publish" 
+              checked={isPublished}
+              onChange={(e) => setIsPublished(e.target.checked)}
+              className="w-5 h-5 text-primary border-gray-300 rounded focus:ring-primary"
+            />
+            <label htmlFor="publish" className="text-sm font-bold text-slate-700 cursor-pointer select-none">
+              Publish immediately
+            </label>
+            <span className="text-xs text-slate-500">(If unchecked, it will be saved but hidden from the public)</span>
+          </div>
+        </div>
+
+        <div className="bg-slate-50 px-8 py-5 border-t border-slate-100 flex justify-end">
+          <button 
+            type="submit"
+            disabled={loading}
+            className="tactical-gradient text-white px-8 py-3 font-bold uppercase tracking-wider text-sm flex items-center gap-2 rounded shadow-lg hover:-translate-y-0.5 transition-transform disabled:opacity-50 disabled:hover:translate-y-0"
+          >
+            {loading ? 'Saving...' : <><Save size={18} /> Save Blog Post</>}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+};
+
+export default CreateBlog;

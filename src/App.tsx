@@ -1,4 +1,3 @@
-
 import Home from './pages/Home';
 
 import { Routes, Route } from 'react-router-dom';
@@ -6,11 +5,14 @@ import { Routes, Route } from 'react-router-dom';
 import Services from './pages/Services';
 import JobPortal from './pages/JobPortal';
 import Contact from './pages/Contact';
+import BlogList from './pages/BlogList';
+import BlogPost from './pages/BlogPost';
 
 import PublicLayout from './layouts/PublicLayout';
 import AdminLayout from './layouts/AdminLayout';
 import AdminDashboard from './pages/admin/Dashboard';
 import AdminPartners from './pages/admin/Partners';
+import CreateBlog from './pages/admin/CreateBlog';
 import CompanyProfile from './pages/CompanyProfile';
 import ServiceDetail from './pages/ServiceDetail';
 import Login from './pages/admin/Login';
@@ -26,6 +28,8 @@ function App() {
         <Route path="/services/:serviceId" element={<ServiceDetail />} />
         <Route path="/job-portal" element={<JobPortal />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/blog" element={<BlogList />} />
+        <Route path="/blog/:slug" element={<BlogPost />} />
       </Route>
 
       {/* Admin Login Route */}
@@ -39,6 +43,7 @@ function App() {
         <Route path="partners" element={<AdminPartners />} />
         <Route path="users" element={<div className="p-8">Users Coming Soon</div>} />
         <Route path="settings" element={<div className="p-8">Settings Coming Soon</div>} />
+        <Route path="blogs/create" element={<CreateBlog />} />
       </Route>
     </Routes>
   );
