@@ -41,7 +41,7 @@ const AdminLayout = () => {
             <Users size={20} />
             <span className="font-medium text-sm">Users & Staff</span>
           </Link>
-          <Link to="/admin/blogs/create" className={`flex items-center gap-3 px-4 py-3 rounded-md transition-colors ${isActive('/admin/blogs/create')}`}>
+          <Link to="/admin/blogs" className={`flex items-center gap-3 px-4 py-3 rounded-md transition-colors ${location.pathname.startsWith('/admin/blogs') ? 'bg-primary-container text-white' : 'text-slate-300 hover:bg-primary-container/50 hover:text-white'}`}>
             <FileText size={20} />
             <span className="font-medium text-sm">Manage Blogs</span>
           </Link>

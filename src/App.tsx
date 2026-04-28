@@ -13,6 +13,8 @@ import AdminLayout from './layouts/AdminLayout';
 import AdminDashboard from './pages/admin/Dashboard';
 import AdminPartners from './pages/admin/Partners';
 import CreateBlog from './pages/admin/CreateBlog';
+import ManageBlogs from './pages/admin/ManageBlogs';
+import EditBlog from './pages/admin/EditBlog';
 import CompanyProfile from './pages/CompanyProfile';
 import ServiceDetail from './pages/ServiceDetail';
 import Login from './pages/admin/Login';
@@ -43,7 +45,9 @@ function App() {
         <Route path="partners" element={<AdminPartners />} />
         <Route path="users" element={<div className="p-8">Users Coming Soon</div>} />
         <Route path="settings" element={<div className="p-8">Settings Coming Soon</div>} />
+        <Route path="blogs" element={<ManageBlogs />} />
         <Route path="blogs/create" element={<CreateBlog />} />
+        <Route path="blogs/edit/:id" element={<EditBlog />} />
       </Route>
     </Routes>
   );

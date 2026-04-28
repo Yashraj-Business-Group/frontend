@@ -1,17 +1,42 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Save, Image as ImageIcon, Upload } from 'lucide-react';
 import { supabase } from '../../supabase';
 
-const CreateBlog = () => {
+const EditBlog = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [coverImage, setCoverImage] = useState('');
   const [content, setContent] = useState('');
   const [isPublished, setIsPublished] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    const fetchBlog = async () => {
+      try {
+        const res = await fetch(`http://localhost:5000/api/admin/blogs`);
+        const data = await res.json();
+        const blog = data.find((b: any) => b.id === id);
+        if (blog) {
+          setTitle(blog.title);
+          setCoverImage(blog.coverImage || '');
+          setContent(blog.content);
+          setIsPublished(blog.isPublished);
+        } else {
+          setError('Blog not found');
+        }
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setFetching(false);
+      }
+    };
+    fetchBlog();
+  }, [id]);
 
   const handleImageUpload = async (file: File) => {
     if (!file) return;
@@ -45,41 +70,34 @@ const CreateBlog = () => {
     setLoading(true);
     setError('');
 
-    // Fetch user from local storage
     const userStr = localStorage.getItem('adminUser');
     const token = localStorage.getItem('adminToken');
     
     if (!userStr || !token) {
-      setError('You must be logged in to create a blog.');
+      setError('You must be logged in to edit a blog.');
       setLoading(false);
       return;
     }
-    
-    const user = JSON.parse(userStr);
 
     try {
-      const res = await fetch('http://localhost:5000/api/blogs', {
-        method: 'POST',
+      const res = await fetch(`http://localhost:5000/api/blogs/${id}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          // In a fully robust app, include Authorization header here:
-          // 'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           title,
           content,
           coverImage,
           isPublished,
-          authorId: user.id
         })
       });
 
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || 'Failed to create blog');
+        throw new Error(data.error || 'Failed to update blog');
       }
 
-      // Success, redirect to blogs list or dashboard
       navigate('/admin/blogs');
     } catch (err: any) {
       setError(err.message);
@@ -88,12 +106,14 @@ const CreateBlog = () => {
     }
   };
 
+  if (fetching) return <div className="p-8">Loading...</div>;
+
   return (
     <div className="max-w-4xl space-y-8 animate-in fade-in slide-in-from-bottom-4">
       <div className="flex justify-between items-end">
         <div>
-          <h1 className="text-3xl font-headline font-bold text-slate-800">Create New Blog Post</h1>
-          <p className="text-slate-500 mt-1">Write and publish new content for the public site.</p>
+          <h1 className="text-3xl font-headline font-bold text-slate-800">Edit Blog Post</h1>
+          <p className="text-slate-500 mt-1">Update your blog content.</p>
         </div>
       </div>
 
@@ -177,19 +197,26 @@ const CreateBlog = () => {
               className="w-5 h-5 text-primary border-gray-300 rounded focus:ring-primary"
             />
             <label htmlFor="publish" className="text-sm font-bold text-slate-700 cursor-pointer select-none">
-              Publish immediately
+              Published
             </label>
-            <span className="text-xs text-slate-500">(If unchecked, it will be saved but hidden from the public)</span>
+            <span className="text-xs text-slate-500">(If unchecked, it will be hidden from the public)</span>
           </div>
         </div>
 
-        <div className="bg-slate-50 px-8 py-5 border-t border-slate-100 flex justify-end">
+        <div className="bg-slate-50 px-8 py-5 border-t border-slate-100 flex justify-end gap-4">
+          <button 
+            type="button"
+            onClick={() => navigate('/admin/blogs')}
+            className="px-6 py-3 font-bold uppercase tracking-wider text-sm text-slate-600 hover:bg-slate-200 rounded transition-colors"
+          >
+            Cancel
+          </button>
           <button 
             type="submit"
             disabled={loading}
             className="tactical-gradient text-white px-8 py-3 font-bold uppercase tracking-wider text-sm flex items-center gap-2 rounded shadow-lg hover:-translate-y-0.5 transition-transform disabled:opacity-50 disabled:hover:translate-y-0"
           >
-            {loading ? 'Saving...' : <><Save size={18} /> Save Blog Post</>}
+            {loading ? 'Saving...' : <><Save size={18} /> Update Blog Post</>}
           </button>
         </div>
       </form>
@@ -197,4 +224,4 @@ const CreateBlog = () => {
   );
 };
 
-export default CreateBlog;
+export default EditBlog;
