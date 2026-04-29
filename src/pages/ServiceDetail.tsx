@@ -17,7 +17,7 @@ const servicesData: Record<string, any> = {
       'Hospital & IT Park Security',
       'Professional Bouncer Services for Events',
     ],
-    image: 'https://images.unsplash.com/photo-1628151015968-3a4429e9ef04?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
+    image: '/career-middle-image.jpg'
   },
   'house-keeping': {
     title: 'House Keeping Services',
@@ -114,7 +114,7 @@ const servicesData: Record<string, any> = {
 const ServiceDetail = () => {
   const { serviceId } = useParams();
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', details: '' });
-  
+
   // Ensure the route matches a valid service, otherwise show 404/fallback
   const service = serviceId ? servicesData[serviceId] : null;
 
@@ -143,89 +143,125 @@ const ServiceDetail = () => {
 
   return (
     <div className="w-full bg-surface-bright pb-24">
-      
+
       {/* Service Header */}
       <section className={`${service.color} pt-32 pb-20 px-8 relative overflow-hidden text-white`}>
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent z-10"></div>
         {/* We use a solid color background with a gradient overlay instead of relying on the image for the main hero to ensure text readability */}
         <div className="relative z-20 max-w-7xl mx-auto flex items-center gap-6">
-            <div className="w-20 h-20 bg-white/10 backdrop-blur-md rounded-lg flex items-center justify-center border border-white/20 shrink-0 hidden md:flex">
-                <IconComponent size={40} className="text-white" />
-            </div>
-            <div>
-                <span className="font-bold uppercase tracking-widest text-sm text-white/80 block mb-2">Service Division</span>
-                <h1 className="font-headline text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none">
-                    {service.title}
-                </h1>
-            </div>
+          <div className="w-20 h-20 bg-white/10 backdrop-blur-md rounded-lg flex items-center justify-center border border-white/20 shrink-0 hidden md:flex">
+            <IconComponent size={40} className="text-white" />
+          </div>
+          <div>
+            <span className="font-bold uppercase tracking-widest text-sm text-white/80 block mb-2">Service Division</span>
+            <h1 className="font-headline text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none">
+              {service.title}
+            </h1>
+          </div>
         </div>
       </section>
 
       {/* Main Content Layout */}
       <section className="max-w-7xl mx-auto px-8 -mt-10 relative z-30">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+
+          {/* Left Content (Image & Details) */}
+          <div className="lg:col-span-2 space-y-12">
+            <div className="bg-white p-2 rounded-lg tactical-shadow">
+              <div className="aspect-[21/9] rounded overflow-hidden relative bg-slate-200">
+                <img src={service.image} alt={service.title} className="w-full h-full object-cover" />
+              </div>
+            </div>
+
+            <div className="bg-white p-10 rounded-lg tactical-shadow border-t-4 border-slate-200">
+              <h2 className="font-headline text-3xl font-bold text-slate-800 mb-6">Overview</h2>
+              <p className="text-lg text-slate-600 leading-relaxed mb-8">
+                {service.description}
+              </p>
+
+              <h3 className="font-headline text-2xl font-bold text-slate-800 mb-6">What We Provide</h3>
+              <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {service.details.map((detail: string, index: number) => (
+                  <li key={index} className="flex items-start gap-3">
+                    <span className={`mt-1 rounded-full p-1 bg-slate-100 ${service.textColor}`}>
+                      <ArrowRight size={16} />
+                    </span>
+                    <span className="text-slate-700 font-medium">{detail}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* Right Content (Quotation Form) */}
+          <div className="lg:col-span-1 relative z-20">
+            {/* Animated Glow Background behind the form */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-[#002451] to-blue-400 rounded-2xl blur-lg opacity-20 animate-pulse hidden lg:block pointer-events-none"></div>
             
-            {/* Left Content (Image & Details) */}
-            <div className="lg:col-span-2 space-y-12">
-                <div className="bg-white p-2 rounded-lg tactical-shadow">
-                    <div className="aspect-[21/9] rounded overflow-hidden relative bg-slate-200">
-                        <img src={service.image} alt={service.title} className="w-full h-full object-cover" />
-                    </div>
+            <div className="bg-white p-8 rounded-xl shadow-[0px_20px_40px_rgba(0,36,81,0.08)] border border-slate-100 relative overflow-hidden sticky top-28 transition-transform duration-500 hover:-translate-y-1 group/form z-10 backdrop-blur-sm">
+              {/* Decorative Animated Top Border */}
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#002451] via-blue-500 to-[#002451] bg-[length:200%_auto] animate-gradient"></div>
+              
+              <h3 className="font-headline text-2xl font-black text-[#002451] uppercase tracking-tighter mb-2">Request Quotation</h3>
+              <p className="text-sm text-slate-500 mb-8 font-medium">Get a customized tactical plan for {service.title}.</p>
+
+              <form onSubmit={handleSubmit} className="space-y-5">
+                {/* Full Name */}
+                <div className="relative group/input">
+                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1 group-focus-within/input:text-[#002451] transition-colors">Full Name</label>
+                  <div className="relative">
+                    <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within/input:text-[#002451] transition-colors text-lg">person</span>
+                    <input required type="text" className="w-full bg-slate-50/80 border border-slate-200 text-slate-800 rounded-md pl-11 pr-4 py-3 text-sm focus:bg-white focus:border-[#002451] focus:ring-4 focus:ring-[#002451]/10 outline-none transition-all placeholder:text-slate-400 group-hover/input:border-slate-300 shadow-sm" placeholder="John Doe" />
+                  </div>
                 </div>
 
-                <div className="bg-white p-10 rounded-lg tactical-shadow border-t-4 border-slate-200">
-                    <h2 className="font-headline text-3xl font-bold text-slate-800 mb-6">Overview</h2>
-                    <p className="text-lg text-slate-600 leading-relaxed mb-8">
-                        {service.description}
-                    </p>
-
-                    <h3 className="font-headline text-2xl font-bold text-slate-800 mb-6">What We Provide</h3>
-                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {service.details.map((detail: string, index: number) => (
-                            <li key={index} className="flex items-start gap-3">
-                                <span className={`mt-1 rounded-full p-1 bg-slate-100 ${service.textColor}`}>
-                                    <ArrowRight size={16} />
-                                </span>
-                                <span className="text-slate-700 font-medium">{detail}</span>
-                            </li>
-                        ))}
-                    </ul>
+                {/* Company Name */}
+                <div className="relative group/input">
+                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1 group-focus-within/input:text-[#002451] transition-colors">Company Name</label>
+                  <div className="relative">
+                    <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within/input:text-[#002451] transition-colors text-lg">domain</span>
+                    <input required type="text" className="w-full bg-slate-50/80 border border-slate-200 text-slate-800 rounded-md pl-11 pr-4 py-3 text-sm focus:bg-white focus:border-[#002451] focus:ring-4 focus:ring-[#002451]/10 outline-none transition-all placeholder:text-slate-400 group-hover/input:border-slate-300 shadow-sm" placeholder="Your Company Ltd." />
+                  </div>
                 </div>
+
+                {/* Email Address */}
+                <div className="relative group/input">
+                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1 group-focus-within/input:text-[#002451] transition-colors">Email Address</label>
+                  <div className="relative">
+                    <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within/input:text-[#002451] transition-colors text-lg">mail</span>
+                    <input required type="email" className="w-full bg-slate-50/80 border border-slate-200 text-slate-800 rounded-md pl-11 pr-4 py-3 text-sm focus:bg-white focus:border-[#002451] focus:ring-4 focus:ring-[#002451]/10 outline-none transition-all placeholder:text-slate-400 group-hover/input:border-slate-300 shadow-sm" placeholder="john@company.com" />
+                  </div>
+                </div>
+
+                {/* Phone Number */}
+                <div className="relative group/input">
+                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1 group-focus-within/input:text-[#002451] transition-colors">Phone Number</label>
+                  <div className="relative">
+                    <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within/input:text-[#002451] transition-colors text-lg">call</span>
+                    <input required type="tel" className="w-full bg-slate-50/80 border border-slate-200 text-slate-800 rounded-md pl-11 pr-4 py-3 text-sm focus:bg-white focus:border-[#002451] focus:ring-4 focus:ring-[#002451]/10 outline-none transition-all placeholder:text-slate-400 group-hover/input:border-slate-300 shadow-sm" placeholder="+91 XXXXX XXXXX" />
+                  </div>
+                </div>
+
+                {/* Requirements */}
+                <div className="relative group/input">
+                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1 group-focus-within/input:text-[#002451] transition-colors">Specific Requirements</label>
+                  <div className="relative">
+                    <span className="material-symbols-outlined absolute left-4 top-4 text-slate-400 group-focus-within/input:text-[#002451] transition-colors text-lg">description</span>
+                    <textarea rows={3} className="w-full bg-slate-50/80 border border-slate-200 text-slate-800 rounded-md pl-11 pr-4 py-3 text-sm focus:bg-white focus:border-[#002451] focus:ring-4 focus:ring-[#002451]/10 outline-none transition-all placeholder:text-slate-400 resize-none group-hover/input:border-slate-300 shadow-sm" placeholder="Describe your operational needs..."></textarea>
+                  </div>
+                </div>
+
+                {/* Animated Submit Button */}
+                <button type="submit" className="relative w-full overflow-hidden bg-[#002451] text-white py-4 font-bold uppercase tracking-widest text-xs rounded-md shadow-[0_8px_20px_rgba(0,36,81,0.25)] hover:shadow-[0_12px_25px_rgba(0,36,81,0.35)] active:scale-[0.98] transition-all mt-4 flex items-center justify-center gap-2 group cursor-pointer border border-[#002451]/50">
+                  <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></span>
+                  <span className="relative z-10 flex items-center gap-2">
+                    Submit Request
+                    <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform duration-300">send</span>
+                  </span>
+                </button>
+              </form>
             </div>
-
-            {/* Right Content (Quotation Form) */}
-            <div className="lg:col-span-1">
-                <div className="bg-white p-8 rounded-lg tactical-shadow border-t-8 border-primary sticky top-28">
-                    <h3 className="font-headline text-2xl font-black text-primary uppercase tracking-tighter mb-2">Request Quotation</h3>
-                    <p className="text-sm text-slate-500 mb-6">Fill out the form below to get a customized plan for {service.title}.</p>
-                    
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <div>
-                            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Full Name</label>
-                            <input required type="text" className="w-full border-gray-300 rounded focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 bg-slate-50" placeholder="John Doe" />
-                        </div>
-                        <div>
-                            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Company Name</label>
-                            <input required type="text" className="w-full border-gray-300 rounded focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 bg-slate-50" placeholder="Your Company" />
-                        </div>
-                        <div>
-                            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Email</label>
-                            <input required type="email" className="w-full border-gray-300 rounded focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 bg-slate-50" placeholder="john@example.com" />
-                        </div>
-                        <div>
-                            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Phone</label>
-                            <input required type="tel" className="w-full border-gray-300 rounded focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 bg-slate-50" placeholder="+91 XXXX XXXX" />
-                        </div>
-                        <div>
-                            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Specific Requirements</label>
-                            <textarea rows={3} className="w-full border-gray-300 rounded focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 bg-slate-50" placeholder="Number of guards, area size, etc..."></textarea>
-                        </div>
-                        <button type="submit" className="w-full tactical-gradient text-white py-4 font-bold uppercase tracking-widest text-sm active:scale-95 transition-transform mt-4">
-                            Send Request
-                        </button>
-                    </form>
-                </div>
-            </div>
+          </div>
 
         </div>
       </section>

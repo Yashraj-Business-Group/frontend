@@ -7,6 +7,7 @@ import JobPortal from './pages/JobPortal';
 import Contact from './pages/Contact';
 import BlogList from './pages/BlogList';
 import BlogPost from './pages/BlogPost';
+import Gallery from './pages/Gallery';
 
 import PublicLayout from './layouts/PublicLayout';
 import AdminLayout from './layouts/AdminLayout';
@@ -32,6 +33,7 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/blog" element={<BlogList />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
+        <Route path="/gallery" element={<Gallery />} />
       </Route>
 
       {/* Admin Login Route */}
