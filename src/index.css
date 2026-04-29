@@ -58,6 +58,12 @@
   --radius-lg: 0px;
   --radius-xl: 0px;
   --radius-full: 9999px;
+
+  --animate-infinite-scroll: infinite-scroll 40s linear infinite;
+  @keyframes infinite-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-100%); }
+  }
 }
 
 @layer base {
