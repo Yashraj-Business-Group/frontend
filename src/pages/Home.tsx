@@ -11,11 +11,18 @@ const Home: React.FC = () => {
     <main>
       {/* Hero Slider */}
       <section className="relative h-[921px] w-full overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <img className="w-full h-full object-cover" data-alt="Professional security guards in tactical uniform standing in formation outside a modern corporate glass building during daytime" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCM_nSTHhy6jiGQ6ZLciMORVZZEM29xGsOXVfNkdvNYEv_SU_gFWxEUKx2aXi-euz4lR36JVeji0OJJG_yYJxd3fPKK-3H1ZON_j9AWj3bA59ngE37KBKzjx_loun_vPD-fr2nVVXxYWTnK_M9MXOPc0Qw1wtjmSGXQztLCrrJDAkgF7jideIfh-09IyU67LEfKAZCODkOVhSjMkxgK8IvwsCuecackZiqpHawqI_vy2pe8jYvlekcpaPwzJvi44J0Z1_o_JobOKc"/>
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
-        </div>
-        <div className="relative z-10 h-full max-w-7xl mx-auto px-5 md:px-8 flex flex-col justify-center items-start text-white">
+       <div className="absolute inset-0 z-0">
+  <video
+    className="w-full h-full object-cover"
+    autoPlay
+    muted
+    loop
+    playsInline
+    src="/background.mp4"
+  />
+  <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
+</div>
+       <div className="relative z-10 h-full w-full px-5 md:px-8 lg:px-16 flex flex-col justify-center items-start text-white">
           <span className="label-sm font-bold uppercase tracking-[0.2em] text-on-primary-container mb-6 block">Elite Protection Services</span>
           <h1 className="font-headline text-5xl sm:text-6xl md:text-8xl font-extrabold tracking-tighter leading-[0.9] mb-8 max-w-4xl">
             COMMANDING <br/>SECURITY.
