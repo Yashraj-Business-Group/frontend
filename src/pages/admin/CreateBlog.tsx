@@ -58,7 +58,7 @@ const CreateBlog = () => {
     const user = JSON.parse(userStr);
 
     try {
-      const res = await fetch('http://localhost:5000/api/blogs', {
+      const res = await fetch('/api/blogs', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

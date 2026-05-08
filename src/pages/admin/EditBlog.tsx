@@ -18,7 +18,7 @@ const EditBlog = () => {
   useEffect(() => {
     const fetchBlog = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/admin/blogs`);
+        const res = await fetch(`/api/admin/blogs`);
         const data = await res.json();
         const blog = data.find((b: any) => b.id === id);
         if (blog) {
@@ -80,7 +80,7 @@ const EditBlog = () => {
     }
 
     try {
-      const res = await fetch(`http://localhost:5000/api/blogs/${id}`, {
+      const res = await fetch(`/api/blogs/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -19,6 +19,8 @@ import EditBlog from './pages/admin/EditBlog';
 import CompanyProfile from './pages/CompanyProfile';
 import ServiceDetail from './pages/ServiceDetail';
 import Login from './pages/admin/Login';
+import JobApplications from './pages/admin/JobApplications';
+import ServiceRequests from './pages/admin/ServiceRequests';
 
 function App() {
   return (
@@ -42,8 +44,8 @@ function App() {
       {/* Admin Routes */}
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<AdminDashboard />} />
-        <Route path="requests" element={<div className="p-8">Service Requests Coming Soon</div>} />
-        <Route path="jobs" element={<div className="p-8">Job Applications Coming Soon</div>} />
+        <Route path="requests" element={<ServiceRequests />} />
+        <Route path="jobs" element={<JobApplications />} />
         <Route path="partners" element={<AdminPartners />} />
         <Route path="users" element={<div className="p-8">Users Coming Soon</div>} />
         <Route path="settings" element={<div className="p-8">Settings Coming Soon</div>} />

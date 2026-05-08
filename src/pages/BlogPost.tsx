@@ -22,7 +22,7 @@ const BlogPost = () => {
   useEffect(() => {
     const fetchBlog = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/blogs/${slug}`);
+        const res = await fetch(`/api/blogs/${slug}`);
         if (!res.ok) throw new Error('Blog not found');
         const data = await res.json();
         setBlog(data);

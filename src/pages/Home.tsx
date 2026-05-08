@@ -31,7 +31,7 @@ const Home: React.FC = () => {
             Protecting your corporate assets with military-grade precision and unwavering vigilance across 16+ cities.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-            <button className="tactical-gradient px-8 py-4 sm:px-10 sm:py-5 font-bold uppercase text-sm tracking-widest hover:-translate-y-1 transition-transform">Get Secured Now</button>
+            <Link to="/services" className="tactical-gradient px-8 py-4 sm:px-10 sm:py-5 font-bold uppercase text-sm tracking-widest hover:-translate-y-1 transition-transform text-center">Get Secured Now</Link>
             <button className="border-2 border-white px-8 py-4 sm:px-10 sm:py-5 font-bold uppercase text-sm tracking-widest hover:bg-white hover:text-primary transition-colors">Our Strategy</button>
           </div>
         </div>
@@ -185,9 +185,9 @@ const Home: React.FC = () => {
           <h2 className="font-headline text-3xl md:text-4xl md:text-5xl font-black uppercase tracking-tighter leading-none max-w-3xl">
             We Will Guard &amp; Provide You Safe &amp; Protected Environment
           </h2>
-          <button className="bg-white text-tertiary-container px-12 py-5 font-black uppercase tracking-widest text-sm hover:bg-slate-100 transition-colors">
+          <Link to="/services" className="bg-white text-tertiary-container px-12 py-5 font-black uppercase tracking-widest text-sm hover:bg-slate-100 transition-colors text-center">
             Secure Now
-          </button>
+          </Link>
         </div>
         <div className="absolute right-0 top-0 h-full w-1/3 bg-white/5 skew-x-[-20deg] translate-x-20"></div>
       </section>
@@ -195,30 +195,84 @@ const Home: React.FC = () => {
       {/* Testimonials */}
       <section className="py-20 md:py-32 px-5 md:px-8 bg-surface-container-low">
         <div className="max-w-7xl mx-auto">
-          <h2 className="font-headline text-3xl md:text-4xl font-black text-primary mb-16 uppercase tracking-tighter text-center">Executive Testimonials</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:p-12">
+          <div className="flex flex-col items-center mb-16 text-center">
+            <h2 className="font-headline text-3xl md:text-4xl font-black text-primary uppercase tracking-tighter mb-4">What Our Clients Say</h2>
+            <div className="flex items-center gap-4 bg-white px-6 py-3 rounded-full shadow-sm border border-slate-100">
+              <span className="text-2xl font-black text-slate-800">4.9</span>
+              <div className="flex gap-1 text-amber-400">
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} className="material-symbols-outlined text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                ))}
+              </div>
+              <span className="text-sm text-slate-500 font-medium border-l border-slate-200 pl-4">Based on 91 reviews</span>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
             {[ 
-              { quote: "Their security protocols are unmatched in the industry. We've seen a significant reduction in onsite risks since partnering with Yashraj Group.", author: "Director, Industrial Corp" },
-              { quote: "Seamless facility management. They operate with a level of professionalism that allows us to focus entirely on our core business operations.", author: "CEO, Fintech Hub" },
-              { quote: "Handling labour compliance used to be a headache. Yashraj Group's manpower solutions are reliable and fully compliant.", author: "HR Head, Manufacturing Ltd" }
+              { 
+                author: "Pradip Sake",
+                time: "2 months ago",
+                rating: 5,
+                quote: "We are pleased to share that YBG Security has successfully obtained the PASARA license. The entire process was completed in a smooth, systematic, and professional manner. All required documentation and legal formalities were handled...",
+                avatar: "P",
+                color: "bg-purple-600"
+              },
+              { 
+                author: "Sanjay Kumar",
+                time: "5 months ago",
+                rating: 5,
+                quote: "Best security services in Pune. Very professional and well trained guards. Management is very responsive and helpful for society requirements.",
+                avatar: "S",
+                color: "bg-blue-600"
+              },
+              { 
+                author: "Amit Sharma",
+                time: "8 months ago",
+                rating: 5,
+                quote: "Excellent facility management and housekeeping services. They maintain our corporate office impeccably. Highly recommended for commercial spaces.",
+                avatar: "A",
+                color: "bg-emerald-600"
+              }
             ].map((test, index) => (
-              <div key={index} className="group h-[350px] bg-transparent [perspective:1000px]">
-                <div className="relative w-full h-full transition-transform duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
-                  <div className="absolute inset-0 bg-white p-8 lg:p-12 tactical-shadow border-t-8 border-primary [backface-visibility:hidden] flex flex-col justify-center items-center text-center">
-                    <div className="flex gap-1 mb-6 text-tertiary-container">
-                      {[...Array(5)].map((_, i) => (
-                        <span key={i} className="material-symbols-outlined text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                      ))}
-                    </div>
-                    <div className="font-bold text-primary uppercase text-lg tracking-widest">{test.author}</div>
-                    <div className="text-sm text-slate-400 mt-4 uppercase tracking-widest">Hover to review</div>
+              <div key={index} className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col hover:shadow-md transition-shadow">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className={`w-12 h-12 rounded-full ${test.color} text-white flex items-center justify-center font-bold text-xl`}>
+                    {test.avatar}
                   </div>
-                  <div className="absolute inset-0 bg-primary text-white p-8 lg:p-12 tactical-shadow border-t-8 border-tertiary-container [backface-visibility:hidden] [transform:rotateY(180deg)] flex flex-col justify-center items-center text-center">
-                    <p className="italic text-blue-100 leading-relaxed text-lg mb-0">"{test.quote}"</p>
+                  <div>
+                    <div className="font-bold text-slate-800">{test.author}</div>
+                    <div className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
+                      {test.time} on 
+                      <svg className="w-3.5 h-3.5 ml-0.5" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                      </svg>
+                    </div>
                   </div>
                 </div>
+                <div className="flex gap-0.5 mb-3 text-amber-400">
+                  {[...Array(test.rating)].map((_, i) => (
+                    <span key={i} className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                  ))}
+                </div>
+                <p className="text-slate-600 text-sm flex-grow leading-relaxed">"{test.quote}"</p>
               </div>
             ))}
+          </div>
+          
+          <div className="text-center mt-12">
+            <a href="https://www.google.com/search?q=Yashraj+Business+Group+Pvt+Ltd." target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 border border-slate-300 bg-white px-6 py-3 rounded-full font-bold text-sm text-slate-700 hover:bg-slate-50 transition-colors shadow-sm">
+              <svg className="w-5 h-5" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+              </svg>
+              View all Google Reviews
+            </a>
           </div>
         </div>
       </section>

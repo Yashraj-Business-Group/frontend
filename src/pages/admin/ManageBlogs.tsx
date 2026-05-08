@@ -9,7 +9,7 @@ const ManageBlogs = () => {
 
   const fetchBlogs = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/admin/blogs');
+      const res = await fetch('/api/admin/blogs');
       if (!res.ok) throw new Error('Failed to fetch blogs');
       const data = await res.json();
       setBlogs(data);
@@ -26,7 +26,7 @@ const ManageBlogs = () => {
 
   const toggleVisibility = async (id: string, currentStatus: boolean) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/blogs/${id}`, {
+      const res = await fetch(`/api/blogs/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ isPublished: !currentStatus })
@@ -44,7 +44,7 @@ const ManageBlogs = () => {
     if (!window.confirm('Are you sure you want to delete this blog?')) return;
     
     try {
-      const res = await fetch(`http://localhost:5000/api/blogs/${id}`, {
+      const res = await fetch(`/api/blogs/${id}`, {
         method: 'DELETE'
       });
       if (!res.ok) throw new Error('Failed to delete blog');
