@@ -1,6 +1,54 @@
 import React from 'react';
 
 const Contact = () => {
+  const [formData, setFormData] = React.useState({
+    fullName: '',
+    companyName: '',
+    email: '',
+    phoneNumber: '',
+    serviceRequired: '',
+    additionalReqs: ''
+  });
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [submitStatus, setSubmitStatus] = React.useState<'idle' | 'success' | 'error'>('idle');
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+
+    try {
+      const res = await fetch('/api/requests', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+
+      if (res.ok) {
+        setSubmitStatus('success');
+        setFormData({
+          fullName: '',
+          companyName: '',
+          email: '',
+          phoneNumber: '',
+          serviceRequired: '',
+          additionalReqs: ''
+        });
+        setTimeout(() => setSubmitStatus('idle'), 5000);
+      } else {
+        setSubmitStatus('error');
+      }
+    } catch (err) {
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="w-full bg-surface-bright min-h-screen pb-24">
       {/* Header */}
@@ -21,48 +69,78 @@ const Contact = () => {
             {/* Contact Info Cards */}
             <div className="space-y-6">
                 
-                <div className="bg-white tactical-shadow p-8 rounded-lg border-t-4 border-primary flex items-start gap-6">
+                <div className="bg-white tactical-shadow p-8 rounded-lg border-t-4 border-primary flex items-start gap-6 hover:-translate-y-1 transition-transform duration-300">
                     <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary shrink-0">
-                        <span className="material-symbols-outlined text-2xl">location_on</span>
+                        <span className="material-symbols-outlined text-2xl">corporate_fare</span>
                     </div>
                     <div>
-                        <h3 className="font-headline text-xl font-bold text-slate-800 mb-2">Corporate Headquarters</h3>
-                        <p className="text-slate-600 leading-relaxed mb-4">
-                            Plot No. 44, Business Hub Center,<br/>
-                            Tech Park Phase II, Mumbai - 400001
-                        </p>
-                        <a href="#" className="text-primary font-bold uppercase text-xs tracking-widest flex items-center gap-2 hover:gap-4 transition-all">
-                            Get Directions <span className="material-symbols-outlined">trending_flat</span>
-                        </a>
+                        <h3 className="font-headline text-xl font-bold text-slate-800 mb-4">Corporate Office, Pune</h3>
+                        
+                        <div className="space-y-4">
+                            <div className="flex items-start gap-3">
+                                <span className="material-symbols-outlined text-primary text-lg mt-0.5 shrink-0">location_on</span>
+                                <div>
+                                    <p className="text-slate-600 leading-relaxed text-sm">
+                                        27, Shree Ganesh Galaxy Complex, Alandi Road (PCMC), Pune-411105
+                                    </p>
+                                    <p className="text-slate-700 text-sm mt-1">
+                                        <span className="font-bold">Landmark:</span> Near Dighi Police Station
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-3">
+                                <span className="material-symbols-outlined text-primary text-lg shrink-0">call</span>
+                                <p className="text-slate-600 text-sm">
+                                    <span className="font-bold mr-1">Office Number:</span> 
+                                    <a href="tel:+918090785907" className="hover:text-primary transition-colors">(+91) 809-078-5907</a>
+                                </p>
+                            </div>
+
+                            <div className="flex items-center gap-3">
+                                <span className="material-symbols-outlined text-primary text-lg shrink-0">mail</span>
+                                <a href="mailto:info@yashrajbusinessgroup.com" className="text-slate-600 text-sm hover:text-primary transition-colors">
+                                    info@yashrajbusinessgroup.com
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div className="bg-white tactical-shadow p-8 rounded-lg border-t-4 border-primary flex items-start gap-6">
+                <div className="bg-white tactical-shadow p-8 rounded-lg border-t-4 border-primary flex items-start gap-6 hover:-translate-y-1 transition-transform duration-300">
                     <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary shrink-0">
-                        <span className="material-symbols-outlined text-2xl">call</span>
+                        <span className="material-symbols-outlined text-2xl">domain</span>
                     </div>
                     <div>
-                        <h3 className="font-headline text-xl font-bold text-slate-800 mb-2">24/7 Control Room</h3>
-                        <p className="text-slate-600 leading-relaxed mb-4">
-                            Primary: +91 22 2548 9XXX<br/>
-                            Emergency: +91 98XXX XXXXX
-                        </p>
-                        <button className="tactical-gradient text-white px-6 py-2 font-bold uppercase tracking-wider text-xs active:scale-95 transition-transform rounded-sm">
-                            Call Now
-                        </button>
-                    </div>
-                </div>
+                        <h3 className="font-headline text-xl font-bold text-slate-800 mb-4">Registered Office, Sangli</h3>
+                        
+                        <div className="space-y-4">
+                            <div className="flex items-start gap-3">
+                                <span className="material-symbols-outlined text-primary text-lg mt-0.5 shrink-0">location_on</span>
+                                <p className="text-slate-600 leading-relaxed text-sm">
+                                    At Post Shirdhon, Tal: K-Mahakal, Dist: Sangli, Pin:416419
+                                </p>
+                            </div>
 
-                <div className="bg-white tactical-shadow p-8 rounded-lg border-t-4 border-primary flex items-start gap-6">
-                    <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary shrink-0">
-                        <span className="material-symbols-outlined text-2xl">mail</span>
-                    </div>
-                    <div>
-                        <h3 className="font-headline text-xl font-bold text-slate-800 mb-2">Direct Communications</h3>
-                        <p className="text-slate-600 leading-relaxed mb-4">
-                            Sales: sales@yashrajbusiness.com<br/>
-                            Support: info@yashrajbusiness.com
-                        </p>
+                            <div className="flex items-center gap-3">
+                                <span className="material-symbols-outlined text-primary text-lg shrink-0">call</span>
+                                <a href="tel:+918090785907" className="text-slate-600 text-sm hover:text-primary transition-colors">
+                                    (+91) 809-078-5907
+                                </a>
+                            </div>
+
+                            <div className="flex items-start gap-3">
+                                <span className="material-symbols-outlined text-primary text-lg mt-0.5 shrink-0">mail</span>
+                                <div className="flex flex-col gap-1">
+                                    <a href="mailto:yashraj.s87@yahoo.com" className="text-slate-600 text-sm hover:text-primary transition-colors">
+                                        yashraj.s87@yahoo.com
+                                    </a>
+                                    <a href="mailto:hr.yashrajsp@gmail.com" className="text-slate-600 text-sm hover:text-primary transition-colors">
+                                        hr.yashrajsp@gmail.com
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -80,20 +158,33 @@ const Contact = () => {
                 <h3 className="font-headline text-3xl font-black text-[#002451] uppercase tracking-tighter mb-2">Request Quotation</h3>
                 <p className="text-sm text-slate-500 mb-8 font-medium">Fill out the form below to get a customized plan for your business.</p>
 
-                <form className="space-y-6">
+                {submitStatus === 'success' && (
+                  <div className="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg flex items-center gap-3">
+                    <span className="material-symbols-outlined">check_circle</span>
+                    Your request has been successfully submitted! We will contact you soon.
+                  </div>
+                )}
+                {submitStatus === 'error' && (
+                  <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-center gap-3">
+                    <span className="material-symbols-outlined">error</span>
+                    There was an error submitting your request. Please try again later.
+                  </div>
+                )}
+
+                <form className="space-y-6" onSubmit={handleSubmit}>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="relative group/input">
                             <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1 group-focus-within/input:text-[#002451] transition-colors">Full Name</label>
                             <div className="relative">
                                 <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within/input:text-[#002451] transition-colors text-lg">person</span>
-                                <input required type="text" className="w-full bg-slate-50/80 border border-slate-200 text-slate-800 rounded-md pl-11 pr-4 py-3 text-sm focus:bg-white focus:border-[#002451] focus:ring-4 focus:ring-[#002451]/10 outline-none transition-all placeholder:text-slate-400 group-hover/input:border-slate-300 shadow-sm" placeholder="John Doe" />
+                                <input required name="fullName" value={formData.fullName} onChange={handleChange} type="text" className="w-full bg-slate-50/80 border border-slate-200 text-slate-800 rounded-md pl-11 pr-4 py-3 text-sm focus:bg-white focus:border-[#002451] focus:ring-4 focus:ring-[#002451]/10 outline-none transition-all placeholder:text-slate-400 group-hover/input:border-slate-300 shadow-sm" placeholder="John Doe" />
                             </div>
                         </div>
                         <div className="relative group/input">
                             <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1 group-focus-within/input:text-[#002451] transition-colors">Company Name</label>
                             <div className="relative">
                                 <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within/input:text-[#002451] transition-colors text-lg">domain</span>
-                                <input required type="text" className="w-full bg-slate-50/80 border border-slate-200 text-slate-800 rounded-md pl-11 pr-4 py-3 text-sm focus:bg-white focus:border-[#002451] focus:ring-4 focus:ring-[#002451]/10 outline-none transition-all placeholder:text-slate-400 group-hover/input:border-slate-300 shadow-sm" placeholder="Acme Corp" />
+                                <input required name="companyName" value={formData.companyName} onChange={handleChange} type="text" className="w-full bg-slate-50/80 border border-slate-200 text-slate-800 rounded-md pl-11 pr-4 py-3 text-sm focus:bg-white focus:border-[#002451] focus:ring-4 focus:ring-[#002451]/10 outline-none transition-all placeholder:text-slate-400 group-hover/input:border-slate-300 shadow-sm" placeholder="Acme Corp" />
                             </div>
                         </div>
                     </div>
@@ -103,14 +194,14 @@ const Contact = () => {
                             <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1 group-focus-within/input:text-[#002451] transition-colors">Email Address</label>
                             <div className="relative">
                                 <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within/input:text-[#002451] transition-colors text-lg">mail</span>
-                                <input required type="email" className="w-full bg-slate-50/80 border border-slate-200 text-slate-800 rounded-md pl-11 pr-4 py-3 text-sm focus:bg-white focus:border-[#002451] focus:ring-4 focus:ring-[#002451]/10 outline-none transition-all placeholder:text-slate-400 group-hover/input:border-slate-300 shadow-sm" placeholder="john@acme.com" />
+                                <input required name="email" value={formData.email} onChange={handleChange} type="email" className="w-full bg-slate-50/80 border border-slate-200 text-slate-800 rounded-md pl-11 pr-4 py-3 text-sm focus:bg-white focus:border-[#002451] focus:ring-4 focus:ring-[#002451]/10 outline-none transition-all placeholder:text-slate-400 group-hover/input:border-slate-300 shadow-sm" placeholder="john@acme.com" />
                             </div>
                         </div>
                         <div className="relative group/input">
                             <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1 group-focus-within/input:text-[#002451] transition-colors">Phone Number</label>
                             <div className="relative">
                                 <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within/input:text-[#002451] transition-colors text-lg">call</span>
-                                <input required type="tel" className="w-full bg-slate-50/80 border border-slate-200 text-slate-800 rounded-md pl-11 pr-4 py-3 text-sm focus:bg-white focus:border-[#002451] focus:ring-4 focus:ring-[#002451]/10 outline-none transition-all placeholder:text-slate-400 group-hover/input:border-slate-300 shadow-sm" placeholder="+91 XXXXX XXXXX" />
+                                <input required name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} type="tel" className="w-full bg-slate-50/80 border border-slate-200 text-slate-800 rounded-md pl-11 pr-4 py-3 text-sm focus:bg-white focus:border-[#002451] focus:ring-4 focus:ring-[#002451]/10 outline-none transition-all placeholder:text-slate-400 group-hover/input:border-slate-300 shadow-sm" placeholder="+91 XXXXX XXXXX" />
                             </div>
                         </div>
                     </div>
@@ -119,13 +210,13 @@ const Contact = () => {
                         <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1 group-focus-within/input:text-[#002451] transition-colors">Service Required</label>
                         <div className="relative">
                             <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within/input:text-[#002451] transition-colors text-lg">business_center</span>
-                            <select className="w-full bg-slate-50/80 border border-slate-200 text-slate-800 rounded-md pl-11 pr-4 py-3 text-sm focus:bg-white focus:border-[#002451] focus:ring-4 focus:ring-[#002451]/10 outline-none transition-all appearance-none group-hover/input:border-slate-300 shadow-sm">
-                                <option>Select a service...</option>
-                                <option>Security Services</option>
-                                <option>Housekeeping</option>
-                                <option>Facility Management</option>
-                                <option>Manpower Supply</option>
-                                <option>Other</option>
+                            <select required name="serviceRequired" value={formData.serviceRequired} onChange={handleChange} className="w-full bg-slate-50/80 border border-slate-200 text-slate-800 rounded-md pl-11 pr-4 py-3 text-sm focus:bg-white focus:border-[#002451] focus:ring-4 focus:ring-[#002451]/10 outline-none transition-all appearance-none group-hover/input:border-slate-300 shadow-sm">
+                                <option value="">Select a service...</option>
+                                <option value="Security Services">Security Services</option>
+                                <option value="Housekeeping">Housekeeping</option>
+                                <option value="Facility Management">Facility Management</option>
+                                <option value="Manpower Supply">Manpower Supply</option>
+                                <option value="Other">Other</option>
                             </select>
                             <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-lg">expand_more</span>
                         </div>
@@ -135,15 +226,15 @@ const Contact = () => {
                         <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1 group-focus-within/input:text-[#002451] transition-colors">Additional Requirements</label>
                         <div className="relative">
                             <span className="material-symbols-outlined absolute left-4 top-4 text-slate-400 group-focus-within/input:text-[#002451] transition-colors text-lg">description</span>
-                            <textarea rows={4} className="w-full bg-slate-50/80 border border-slate-200 text-slate-800 rounded-md pl-11 pr-4 py-3 text-sm focus:bg-white focus:border-[#002451] focus:ring-4 focus:ring-[#002451]/10 outline-none transition-all placeholder:text-slate-400 resize-none group-hover/input:border-slate-300 shadow-sm" placeholder="Please describe your specific needs..."></textarea>
+                            <textarea name="additionalReqs" value={formData.additionalReqs} onChange={handleChange} rows={4} className="w-full bg-slate-50/80 border border-slate-200 text-slate-800 rounded-md pl-11 pr-4 py-3 text-sm focus:bg-white focus:border-[#002451] focus:ring-4 focus:ring-[#002451]/10 outline-none transition-all placeholder:text-slate-400 resize-none group-hover/input:border-slate-300 shadow-sm" placeholder="Please describe your specific needs..."></textarea>
                         </div>
                     </div>
 
-                    <button type="submit" className="relative w-full overflow-hidden bg-[#002451] text-white py-4 font-bold uppercase tracking-widest text-xs rounded-md shadow-[0_8px_20px_rgba(0,36,81,0.25)] hover:shadow-[0_12px_25px_rgba(0,36,81,0.35)] active:scale-[0.98] transition-all mt-4 flex items-center justify-center gap-2 group cursor-pointer border border-[#002451]/50">
+                    <button type="submit" disabled={isSubmitting} className="relative w-full overflow-hidden bg-[#002451] text-white py-4 font-bold uppercase tracking-widest text-xs rounded-md shadow-[0_8px_20px_rgba(0,36,81,0.25)] hover:shadow-[0_12px_25px_rgba(0,36,81,0.35)] active:scale-[0.98] transition-all mt-4 flex items-center justify-center gap-2 group cursor-pointer border border-[#002451]/50 disabled:opacity-70 disabled:cursor-not-allowed">
                         <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></span>
                         <span className="relative z-10 flex items-center gap-2">
-                            Submit Request
-                            <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform duration-300">send</span>
+                            {isSubmitting ? 'Submitting...' : 'Submit Request'}
+                            {!isSubmitting && <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform duration-300">send</span>}
                         </span>
                     </button>
                 </form>

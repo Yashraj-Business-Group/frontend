@@ -1,3 +1,4 @@
+import ScrollToTop from './components/ScrollToTop';
 import Home from './pages/Home';
 
 import { Routes, Route } from 'react-router-dom';
@@ -24,7 +25,9 @@ import ServiceRequests from './pages/admin/ServiceRequests';
 
 function App() {
   return (
-    <Routes>
+    <>
+      <ScrollToTop />
+      <Routes>
       {/* Public Routes */}
       <Route element={<PublicLayout />}>
         <Route path="/" element={<Home />} />
@@ -53,7 +56,8 @@ function App() {
         <Route path="blogs/create" element={<CreateBlog />} />
         <Route path="blogs/edit/:id" element={<EditBlog />} />
       </Route>
-    </Routes>
+      </Routes>
+    </>
   );
 }
 

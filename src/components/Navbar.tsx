@@ -85,9 +85,9 @@ const Navbar: React.FC = () => {
 
         {/* Mobile Actions */}
         <div className="flex items-center gap-2 sm:gap-4 z-50">
-          <button className="hidden sm:block tactical-gradient text-white px-6 md:px-8 py-2 md:py-3 font-bold uppercase tracking-wider text-xs md:text-sm active:scale-95 transition-transform">
+          <a href="tel:+918090785907" className="hidden sm:block tactical-gradient text-white px-6 md:px-8 py-2 md:py-3 font-bold uppercase tracking-wider text-xs md:text-sm active:scale-95 transition-transform">
             Call Us
-          </button>
+          </a>
           <button className="lg:hidden text-[#002451] p-1 sm:p-2" onClick={() => setIsMobileMenuOpen(true)}>
             <span className="material-symbols-outlined text-3xl">menu</span>
           </button>
@@ -134,9 +134,9 @@ const Navbar: React.FC = () => {
         </div>
         
         <div className="p-6 border-t border-gray-100">
-          <button className="w-full tactical-gradient text-white py-4 font-bold uppercase tracking-wider text-sm rounded">
+          <a href="tel:+918090785907" className="w-full block text-center tactical-gradient text-white py-4 font-bold uppercase tracking-wider text-sm rounded">
             Call Us Now
-          </button>
+          </a>
         </div>
       </div>
     </header>

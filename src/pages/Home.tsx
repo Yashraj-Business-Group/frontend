@@ -408,9 +408,14 @@ const Home: React.FC = () => {
               <p className="text-sm text-slate-600">Get a detailed look at our operational capabilities and service standards.</p>
             </div>
           </div>
-          <button className="bg-primary text-white px-8 py-3 font-bold uppercase tracking-widest text-xs flex items-center gap-2">
+          <a
+            href="/brochure.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-primary text-white px-8 py-3 font-bold uppercase tracking-widest text-xs flex items-center gap-2 hover:bg-primary/90 transition-colors"
+          >
             Download <span className="material-symbols-outlined text-sm">download</span>
-          </button>
+          </a>
         </div>
       </section>
 

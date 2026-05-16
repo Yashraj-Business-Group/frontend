@@ -3,64 +3,39 @@ import { Link } from 'react-router-dom';
 
 const galleryItems = [
     {
-        category: 'OPERATIONS',
-        title: 'Security Operations',
+        category: 'SECURITY',
+        title: 'SECURITY GUARD',
         image: 'https://images.unsplash.com/photo-1542626991-cbc4e32524cc?auto=format&fit=crop&q=80&w=800'
     },
     {
-        category: 'FACILITY MANAGEMENT',
-        title: 'Housekeeping Team',
+        category: 'MAINTENANCE',
+        title: 'HOUSE KEEPING',
         image: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&q=80&w=800'
     },
     {
-        category: 'INDUSTRIAL',
-        title: 'Industrial Logistics',
-        image: 'manpower-supply-main.png'
-    },
-    {
-        category: 'CORPORATE',
-        title: 'Executive Strategy',
-        image: 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&q=80&w=800'
-    },
-    {
-        category: 'REAL ESTATE',
-        title: 'Project Milestone',
-        image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80&w=800'
-    },
-    {
-        category: 'DIGITAL',
-        title: 'Digital Infrastructure',
-        image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&q=80&w=800'
-    },
-    {
-        category: 'PLANNING',
-        title: 'Technical Blueprinting',
-        image: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&q=80&w=800'
-    },
-    {
-        category: 'FLEET',
-        title: 'Supply Chain Assets',
-        image: 'https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&q=80&w=800'
-    },
-    {
-        category: 'ADVISORY',
-        title: 'Financial Analysis',
-        image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800'
-    },
-    {
-        category: 'HUMAN CAPITAL',
-        title: 'Training Excellence',
-        image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=800'
-    },
-    {
-        category: 'MAINTENANCE',
-        title: 'Specialized Cleaning',
+        category: 'FACILITY',
+        title: 'FACILITY MANAGEMENT-CLEANING',
         image: 'housekeeping-1.jpg'
     },
     {
-        category: 'SECURITY',
-        title: 'Night Vigilance',
-        image: 'https://images.unsplash.com/photo-1497215842964-222b430dc094?auto=format&fit=crop&q=80&w=800'
+        category: 'MANPOWER',
+        title: 'MANPOWER / LABOUR SUPPLY',
+        image: 'manpower-supply-main.png'
+    },
+    {
+        category: 'STAFFING',
+        title: 'CONTRACT STAFFING / PROJECT PLANNING',
+        image: 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&q=80&w=800'
+    },
+    {
+        category: 'COMPLIANCE',
+        title: 'PF ESIC & P.TAX NEW REG.',
+        image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=800'
+    },
+    {
+        category: 'TAXATION',
+        title: 'ALL TAXATION WORK',
+        image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800'
     }
 ];
 
