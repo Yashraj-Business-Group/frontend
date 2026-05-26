@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const clientLogos = [
-  "anna1.png", "bks1.jpg", "bom1.png", "dbp1.jpg", "epfo1.jpg", "hmm1.jpg",
+  "l1.jpeg", "l2.jpeg", "l3.jpeg", "l4.jpeg", "l5.jpeg", "l6.jpeg", "l7.jpeg","anna1.png", "bks1.jpg", "bom1.png", "dbp1.jpg", "epfo1.jpg", "hmm1.jpg",
   "jai hdabdkaba.jpg", "jap1.jpg", "kub1.jpg", "kvs1.jpg", "mms1.png",
   "mod1.jpg", "png1.jpg", "rda1.png", "re1.png", "si1.png", "st1.png", "sts1.png", "vish1.png"
 ];
@@ -106,7 +106,7 @@ const Home: React.FC = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="group relative aspect-[5/4] md:aspect-[4/5] bg-primary overflow-hidden">
-              <img className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:scale-105 transition-transform duration-500" data-alt="Close up of a security guard's badge on a navy blue uniform, professional and stern atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3mZgl4kvyYJ29O29MOCDAJV1b1wKWnWkdawgify7kZPFbi8yWS2ripAakRUuoeJrEfOrD8nTNX0FosPQvhPMcRwSq-hwdLjhSW45PDwBxkc0LIC7vhP_9AmfOcQ_KteEHNTKrNv8ZJTUKclLKb_JdwnQjEhul4J8Cq73S9gnIczST-I2_jetYHtjAV235nUX3pl7mmOlcT8u4tIhnMjGdNVf_mR4qw-yJXCJKQ_3q_gAk6TBzW-FIbV7nYQPBtuqDdMi7XIiVVt0" />
+              <img className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:scale-105 transition-transform duration-500" data-alt="Close up of a security guard's badge on a navy blue uniform, professional and stern atmosphere" src="guard2.jpeg" />
               <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/20 to-transparent p-6 lg:p-10 flex flex-col justify-end">
                 <h3 className="text-3xl font-headline font-bold text-white mb-4">Security Services</h3>
                 <p className="text-blue-100/80 mb-6">Manned guarding and tactical risk management.</p>
@@ -354,22 +354,22 @@ const Home: React.FC = () => {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             <div className="aspect-square bg-slate-200 overflow-hidden">
-              <img className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" data-alt="Industrial construction site at dusk with heavy machinery and workers in protective gear, dramatic orange light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmhD_dWaF2GfVNF24gXwStIq95zPKHiyacLnOk06W7Bs4P5-JPMIrJ51l7NS9ddmJQ51j82L0Svn_8tb7xhRQvODPoeUumJk3VdfH88dVBJJgw9-TintVhP7CfREsKqv92JPvF6jlYE3VGihONfzzjuKY_4731bKiqOI95Cx4jF9jMfMiZYBg4stv56vtgLfszXYFK20NFyaU7jfpi0xgNJVyrNN0SPL-yL2_U2UW6o6tbtNTio_AaHsbToe-ttUkvE-S_gN-6WDM" />
+              <img className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" data-alt="Industrial construction site at dusk with heavy machinery and workers in protective gear, dramatic orange light" src="guard.jpeg" />
             </div>
             <div className="aspect-square bg-slate-200 overflow-hidden">
-              <img className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" data-alt="Group of professional business consultants in a sleek boardroom setting, corporate high-stakes discussion" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhtUj4Ajm3vRzsKyc0bkjMv99h5YxdZv7JgHUXqX1ekqIAMQ_gX-hOKHdreW672rF9qCGl_QoiIrxi4lNOWrY7LnT9LEvSjPM_0sLS9GSZDkgbOM4AHSaS3ep7Nlw42zOO4kRruZelUPrfuaJjrFXVMOEu_pHXxjpOMStssGp_b_V1Gz8M08o3MOErPzEuqHOdAt9WD1gGxCgET0pJHgKvlCJ7UlB6d8B7p-0I0Bzqrw5ARbLPFt6BQG7f_VDcNWy0wcjqQyeaJI0" />
+              <img className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" data-alt="Group of professional business consultants in a sleek boardroom setting, corporate high-stakes discussion" src="cleaning2.jpeg" />
             </div>
             <div className="aspect-square bg-slate-200 overflow-hidden">
-              <img className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" data-alt="Security operations center with multiple monitors showing surveillance footage, high-tech control room environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDhatkmlk3Ei2f5d5oECYoMVyTZWQeTnd3MwZCBRcmtfQxwT5HsNuh2-MkrWL8CW7za9iYyk_ZWcP5SoGrNv2CbBu0tQIUEWCXQDjP-eusb_pwveCMI9-7u11N_Dl45Y6P0jTV94rNkGFYQvm0opdBajEcT4kulPaciHLGxKMstOzhTL9OWy0xa2y0hs_kLYc0rkAjb3oWk7FIH_ZADCXigZGDiXvvOqKVQO1yQM2ifyUF9taJb0a4RB_-qW1Ohz_jwCHR_OLYZNY" />
+              <img className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" data-alt="Security operations center with multiple monitors showing surveillance footage, high-tech control room environment" src="home3.jpeg" />
             </div>
             <div className="aspect-square bg-slate-200 overflow-hidden">
-              <img className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" data-alt="Janitorial team cleaning a modern commercial glass elevator, focus on hygiene and professional equipment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAX11BaQOAOlWqgnaxPC-keGpjzkaQ9vp7utikBMJTBQ28TagmFWhi4kVkszUaX8k1WeJZJqjwK7RH2bDnRbEUqTiQzYJ1YU1Ecm2OqFPVyTen3Uev9lGjPUBZ6k8owGiLJgSrX5ZFSDE54ob1N1JxVJw53F4CGkL2vZe4C5Ldxr0-4Rark5_d85BHGM362Pk-s7NgnCfy7edhnwaY8Htwy-jg4TldcVmj-cpvc4dzxZH_HF1e3WD67-ticerBhGqVZxxwRWHR4iGc" />
+              <img className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" data-alt="Janitorial team cleaning a modern commercial glass elevator, focus on hygiene and professional equipment" src="home4.jpeg" />
             </div>
             <div className="aspect-square bg-slate-200 overflow-hidden">
-              <img className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" data-alt="Large scale logistics warehouse with forklifts and organized pallet racking, industrial efficiency" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_BZKq38TIss2TW5qv8YPTno9R6sfMomzC3Tg_ONaGBsFSVTEox8uhms93E1WvARynsupidrdDysdfEG0NB0OXEZ4EvkqlEFLER2_WyXJ9l1l_MROydDE0LeJt85VzRKjwkwL2WuhAcGMCR503B4mBtPQ_6wviXGOTnFUhNdo3eANu_DHWJ-vb754LdvfpmFFAUOHVWmYj79E6Q1DkEX0d6k_KWoClNh-q336kUy94cu275CKKBG3U-jLd3up1OyXLMVLRJ08qVS4" />
+              <img className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" data-alt="Large scale logistics warehouse with forklifts and organized pallet racking, industrial efficiency" src="home5.jpeg" />
             </div>
             <div className="aspect-square bg-slate-200 overflow-hidden">
-              <img className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" data-alt="Close up of tax documents and a calculator on a mahogany desk, financial precision and corporate advisory" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBlnvg_zzb6OvMVBlVlHRhlPtanFk61pFNKs5BVgYOxUMA59-ISBSZCE7pw9YjJ-dl5X5z-eeviTt3G_0_oH61RhEEGsbcIvQVaTTZnFRjPoSnEQMUCRBdl5_7851eP8n56QF4uWAk5nm_Ed6J8HXYsPAiJhbgBaDOJYHiBXmVKEAvxXf_mV05y7Mu4H9GH2JQNWqgbpHGuZ_jGeU5RtyCxFkny7rbv9udbTnBk1A8ccyHw0_plKb8gQ6_nR7gPNAZNphBwQOuIJQU" />
+              <img className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" data-alt="Close up of tax documents and a calculator on a mahogany desk, financial precision and corporate advisory" src="management.jpeg" />
             </div>
           </div>
         </div>
