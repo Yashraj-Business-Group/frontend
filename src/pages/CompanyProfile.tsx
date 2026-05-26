@@ -93,8 +93,8 @@ const CompanyProfile = () => {
                         </div>
                     </div>
                     <div>
-                        <h3 className="font-headline text-3xl font-bold text-primary mb-2">MrsAnuradha Patil</h3>
-                        <div className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-4">Position / Role</div>
+                        <h3 className="font-headline text-3xl font-bold text-primary mb-2">Mrs. Anuradha Patil</h3>
+                        <div className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-4">Team Member</div>
                         <p className="text-slate-600 leading-relaxed max-w-2xl">
                             An integral part of the Yashraj Business Group operations, ensuring the delivery of high-quality services and operational excellence across our divisions.
                         </p>

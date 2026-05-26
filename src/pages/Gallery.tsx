@@ -5,7 +5,7 @@ const galleryItems = [
     {
         category: 'SECURITY',
         title: 'SECURITY GUARD',
-        image: 'https://images.unsplash.com/photo-1542626991-cbc4e32524cc?auto=format&fit=crop&q=80&w=800'
+        image: 'guard2.jpeg'
     },
     {
         category: 'MAINTENANCE',
@@ -15,17 +15,17 @@ const galleryItems = [
     {
         category: 'FACILITY',
         title: 'FACILITY MANAGEMENT-CLEANING',
-        image: 'housekeeping-1.jpg'
+        image: 'cleaning.jpeg'
     },
     {
         category: 'MANPOWER',
         title: 'MANPOWER / LABOUR SUPPLY',
-        image: 'manpower-supply-main.png'
+        image: 'manpower.jpeg'
     },
     {
         category: 'STAFFING',
         title: 'CONTRACT STAFFING / PROJECT PLANNING',
-        image: 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&q=80&w=800'
+        image: 'management.jpeg'
     },
     {
         category: 'COMPLIANCE',
