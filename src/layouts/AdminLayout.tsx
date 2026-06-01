@@ -1,9 +1,23 @@
 import React from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import { Outlet, Link, useLocation, Navigate, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, Users, ShieldCheck, Settings, LogOut, Briefcase, Image, FileText } from 'lucide-react';
 
 const AdminLayout = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const token = localStorage.getItem('adminToken');
+  const userStr = localStorage.getItem('adminUser');
+  const user = userStr ? JSON.parse(userStr) : { name: 'Admin User', role: 'Super Admin' };
+
+  if (!token) {
+    return <Navigate to="/admin/login" replace />;
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem('adminToken');
+    localStorage.removeItem('adminUser');
+    navigate('/admin/login');
+  };
 
   const isActive = (path: string) => {
     return location.pathname === path ? 'bg-primary-container text-white' : 'text-slate-300 hover:bg-primary-container/50 hover:text-white';
@@ -55,10 +69,10 @@ const AdminLayout = () => {
         </nav>
 
         <div className="p-4 border-t border-white/10">
-          <Link to="/" className="flex items-center gap-3 px-4 py-3 rounded-md text-slate-300 hover:bg-red-500/20 hover:text-red-400 transition-colors">
+          <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 rounded-md text-slate-300 hover:bg-red-500/20 hover:text-red-400 transition-colors">
             <LogOut size={20} />
             <span className="font-medium text-sm">Logout</span>
-          </Link>
+          </button>
         </div>
       </aside>
 
@@ -71,11 +85,11 @@ const AdminLayout = () => {
             </div>
             <div className="flex items-center gap-4">
                 <div className="flex flex-col text-right">
-                    <span className="text-sm font-bold text-slate-800">Admin User</span>
-                    <span className="text-xs text-slate-500">Super Admin</span>
+                    <span className="text-sm font-bold text-slate-800">{user.name || 'Admin User'}</span>
+                    <span className="text-xs text-slate-500">{user.role || 'Admin'}</span>
                 </div>
                 <div className="w-10 h-10 bg-primary-container rounded-full flex items-center justify-center text-white font-bold">
-                    A
+                    {(user.name || 'A').charAt(0).toUpperCase()}
                 </div>
             </div>
         </header>

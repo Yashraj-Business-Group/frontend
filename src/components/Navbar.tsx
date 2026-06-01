@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { ChevronDown, Share2, Menu, X, User } from 'lucide-react';
 
 const Navbar: React.FC = () => {
   const location = useLocation();
@@ -101,7 +102,7 @@ const Navbar: React.FC = () => {
           <Link className={getLinkClass('/company-profile')} to="/company-profile">About Us</Link>
           <div className="relative group flex items-center h-full">
             <Link to="/services" className={`${getLinkClass('/services')} flex items-center gap-1`}>
-              Services <span className="material-symbols-outlined text-sm">keyboard_arrow_down</span>
+              Services <ChevronDown className="w-4 h-4" />
             </Link>
             <div className="absolute top-full -left-4 w-64 bg-white tactical-shadow py-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
               {serviceLinks.map((service) => (
@@ -119,11 +120,13 @@ const Navbar: React.FC = () => {
           <Link className={getLinkClass('/job-portal')} to="/job-portal">Career</Link>
           <Link className={getLinkClass('/blog')} to="/blog">Blog</Link>
           <Link className={getLinkClass('/contact')} to="/contact">Contact</Link>
-          <Link className={getLinkClass('/admin/login')} to="/admin/login">Admin</Link>
         </nav>
 
-        {/* Mobile Actions */}
+        {/* Right Corner Actions */}
         <div className="flex items-center gap-2 sm:gap-3 z-50">
+          <Link to="/admin/login" className="inline-flex items-center justify-center rounded-full border border-[#D1D9E6] bg-white/95 p-2 md:p-2.5 text-[#002451] shadow-sm backdrop-blur transition-all duration-200 hover:bg-[#F5F7FB] hover:border-[#002451]/20 focus:outline-none focus:ring-2 focus:ring-[#002451]/20" aria-label="Admin Login">
+            <User className="w-4 h-4 md:w-5 md:h-5" />
+          </Link>
           <div ref={socialMenuRef} className="relative">
             <button
               type="button"
@@ -133,7 +136,7 @@ const Navbar: React.FC = () => {
               aria-haspopup="true"
               aria-label="Open social handles"
             >
-              <span className="material-symbols-outlined text-base md:text-lg">share</span>
+              <Share2 className="w-4 h-4 md:w-5 md:h-5" />
               <span className="hidden sm:inline">Socials</span>
             </button>
 
@@ -167,7 +170,7 @@ const Navbar: React.FC = () => {
           </div>
 
           <button className="lg:hidden text-[#002451] p-1 sm:p-2" onClick={() => setIsMobileMenuOpen(true)}>
-            <span className="material-symbols-outlined text-3xl">menu</span>
+            <Menu className="w-8 h-8" />
           </button>
         </div>
       </div>
@@ -180,7 +183,7 @@ const Navbar: React.FC = () => {
         <div className="h-20 border-b border-gray-100 flex items-center justify-between px-6">
           <span className="font-headline font-black text-xl text-[#002451] uppercase">Menu</span>
           <button onClick={() => setIsMobileMenuOpen(false)} className="text-[#002451] p-1 hover:bg-slate-100 rounded-full transition-colors flex items-center justify-center">
-            <span className="material-symbols-outlined text-3xl">close</span>
+            <X className="w-8 h-8" />
           </button>
         </div>
         
@@ -194,7 +197,7 @@ const Navbar: React.FC = () => {
               onClick={() => setIsServicesOpen(!isServicesOpen)}
             >
               Services
-              <span className={`material-symbols-outlined transition-transform ${isServicesOpen ? 'rotate-180' : ''}`}>keyboard_arrow_down</span>
+              <ChevronDown className={`w-6 h-6 transition-transform ${isServicesOpen ? 'rotate-180' : ''}`} />
             </button>
             <div className={`flex flex-col gap-3 overflow-hidden transition-all duration-300 ${isServicesOpen ? 'max-h-96 mt-4' : 'max-h-0'}`}>
               <Link to="/services" className="pl-4 text-sm font-bold text-primary">All Services</Link>
@@ -208,7 +211,6 @@ const Navbar: React.FC = () => {
           <Link to="/job-portal" className={`text-lg font-bold py-3 border-b border-gray-100 ${isActive('/job-portal') ? 'text-primary' : 'text-slate-700'}`}>Career</Link>
           <Link to="/blog" className={`text-lg font-bold py-3 border-b border-gray-100 ${isActive('/blog') ? 'text-primary' : 'text-slate-700'}`}>Blog</Link>
           <Link to="/contact" className={`text-lg font-bold py-3 border-b border-gray-100 ${isActive('/contact') ? 'text-primary' : 'text-slate-700'}`}>Contact</Link>
-          <Link to="/admin/login" className={`text-lg font-bold py-3 border-b border-gray-100 ${isActive('/admin/login') ? 'text-primary' : 'text-slate-700'}`}>Admin</Link>
         </div>
         
         <div className="p-6 border-t border-gray-100">
