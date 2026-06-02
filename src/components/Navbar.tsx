@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ChevronDown, Share2, Menu, X, User } from 'lucide-react';
+import { ChevronDown, Menu, X, User } from 'lucide-react';
 
 const Navbar: React.FC = () => {
   const location = useLocation();
   const path = location.pathname;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isServicesOpen, setIsServicesOpen] = useState(false); // For mobile accordion
-  const [isSocialMenuOpen, setIsSocialMenuOpen] = useState(false);
-  const socialMenuRef = useRef<HTMLDivElement | null>(null);
 
   const isActive = (route: string) => {
     if (route === '/') return path === '/';
@@ -27,30 +25,18 @@ const Navbar: React.FC = () => {
   useEffect(() => {
     setIsMobileMenuOpen(false);
     setIsServicesOpen(false);
-    setIsSocialMenuOpen(false);
   }, [path]);
 
   // Lock body scroll when mobile menu is open
   useEffect(() => {
     if (isMobileMenuOpen) {
       document.body.style.overflow = 'hidden';
-      setIsSocialMenuOpen(false);
     } else {
       document.body.style.overflow = 'unset';
     }
     return () => { document.body.style.overflow = 'unset'; }
   }, [isMobileMenuOpen]);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (socialMenuRef.current && !socialMenuRef.current.contains(event.target as Node)) {
-        setIsSocialMenuOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   const serviceLinks = [
     { path: '/services/security-guard', label: 'Security Services' },
@@ -59,29 +45,24 @@ const Navbar: React.FC = () => {
     { path: '/services/manpower-labour', label: 'Manpower Supply' },
     { path: '/services/contract-staffing', label: 'Contract Staffing' },
     { path: '/services/pf-esic', label: 'PF & ESIC' },
-    { path: '/services/all-taxation', label: 'Taxation' }
+    { path: '/services/all-taxation', label: 'Taxation' },
+    { path: '/services/psara-licensing', label: 'PSARA Licensing' }
   ];
 
   const socialLinks = [
     {
-      name: 'WhatsApp Bot',
+      name: 'WhatsApp',
       href: 'https://wa.me/7276580907?text=Hello%20Yashraj%20Business%20Group',
-      description: 'Chat with support instantly',
-      accent: 'from-[#25D366] to-[#128C7E]',
       badge: 'social.png'
     },
     {
       name: 'Instagram',
       href: 'https://www.instagram.com/yashraj.business.group?igsh=ejN3NXIzNW5heXk3&utm_source=qr',
-      description: 'Follow updates and campaigns',
-      accent: 'from-[#F58529] via-[#DD2A7B] to-[#515BD4]',
       badge: 'instagram.png'
     },
     {
       name: 'Facebook',
       href: 'https://www.facebook.com/share/1ThFvN4Upy/?mibextid=wwXIfr',
-      description: 'See business updates',
-      accent: 'from-[#1877F2] to-[#0B66D5]',
       badge: 'facebook.png'
     }
   ];
@@ -127,47 +108,23 @@ const Navbar: React.FC = () => {
           <Link to="/admin/login" className="inline-flex items-center justify-center rounded-full border border-[#D1D9E6] bg-white/95 p-2 md:p-2.5 text-[#002451] shadow-sm backdrop-blur transition-all duration-200 hover:bg-[#F5F7FB] hover:border-[#002451]/20 focus:outline-none focus:ring-2 focus:ring-[#002451]/20" aria-label="Admin Login">
             <User className="w-4 h-4 md:w-5 md:h-5" />
           </Link>
-          <div ref={socialMenuRef} className="relative">
-            <button
-              type="button"
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-[#D1D9E6] bg-white/95 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.24em] text-[#002451] shadow-sm backdrop-blur transition-all duration-200 hover:bg-[#F5F7FB] hover:border-[#002451]/20 focus:outline-none focus:ring-2 focus:ring-[#002451]/20 sm:px-4 sm:text-[11px] md:py-2.5"
-              onClick={() => setIsSocialMenuOpen((open) => !open)}
-              aria-expanded={isSocialMenuOpen}
-              aria-haspopup="true"
-              aria-label="Open social handles"
+          
+          {socialLinks.map((social) => (
+            <a
+              key={social.name}
+              href={social.href}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center justify-center rounded-full border border-[#D1D9E6] bg-white/95 p-2 md:p-2.5 shadow-sm backdrop-blur transition-all duration-200 hover:bg-[#F5F7FB] hover:border-[#002451]/20 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#002451]/20"
+              aria-label={social.name}
             >
-              <Share2 className="w-4 h-4 md:w-5 md:h-5" />
-              <span className="hidden sm:inline">Socials</span>
-            </button>
-
-            {isSocialMenuOpen && (
-              <div className="absolute right-0 top-full mt-2 w-64 rounded-2xl border border-slate-200 bg-white p-2 shadow-2xl z-[60]">
-                <div className="px-2 py-1.5 text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500">Connect with us</div>
-                {socialLinks.map((social) => (
-                  <a
-                    key={social.name}
-                    href={social.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-slate-50"
-                    onClick={() => setIsSocialMenuOpen(false)}
-                  >
-                    <span className={`relative flex h-9 w-9 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br ${social.accent} p-[1px] shadow-sm`}>
-                      <img
-                        src={`/${social.badge}`}
-                        alt={`${social.name} logo`}
-                        className="h-full w-full rounded-full object-cover bg-white"
-                      />
-                    </span>
-                    <span className="flex-1">
-                      <span className="block text-sm font-bold text-[#002451]">{social.name}</span>
-                      <span className="block text-xs text-slate-500">{social.description}</span>
-                    </span>
-                  </a>
-                ))}
-              </div>
-            )}
-          </div>
+              <img
+                src={`/${social.badge}`}
+                alt={`${social.name} logo`}
+                className="w-4 h-4 md:w-5 md:h-5 rounded-full object-cover bg-white"
+              />
+            </a>
+          ))}
 
           <button className="lg:hidden text-[#002451] p-1 sm:p-2" onClick={() => setIsMobileMenuOpen(true)}>
             <Menu className="w-8 h-8" />

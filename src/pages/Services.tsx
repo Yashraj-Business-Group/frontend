@@ -108,6 +108,20 @@ const Services = () => {
             </div>
           </Link>
 
+          {/* PSARA Licensing */}
+          <Link to="/services/psara-licensing" className="bg-white p-10 tactical-shadow border-t-4 border-[#002451] group hover:-translate-y-2 transition-transform duration-300 block">
+            <div className="w-16 h-16 bg-[#002451]/10 rounded-full flex items-center justify-center mb-6 text-[#002451] group-hover:bg-[#002451] group-hover:text-white transition-colors duration-300">
+              <span className="material-symbols-outlined text-3xl">verified_user</span>
+            </div>
+            <h3 className="font-headline text-2xl font-bold text-[#002451] mb-4">PSARA Licensing</h3>
+            <p className="text-slate-600 mb-6 leading-relaxed">
+              Comprehensive consultancy for PSARA license registration, renewal, state-wise assistance, police verification coordination, and security agency startup support.
+            </p>
+            <div className="text-[#002451] font-bold uppercase text-xs tracking-widest flex items-center gap-2 group-hover:gap-4 transition-all">
+              Request Quote <span className="material-symbols-outlined">trending_flat</span>
+            </div>
+          </Link>
+
         </div>
       </section>
 

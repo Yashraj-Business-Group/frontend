@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const galleryItems = [
+const defaultGalleryItems = [
     {
         category: 'SECURITY',
         title: 'SECURITY GUARD',
@@ -40,8 +40,35 @@ const galleryItems = [
 ];
 
 const Gallery: React.FC = () => {
+    const [items, setItems] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+
     useEffect(() => {
         window.scrollTo(0, 0);
+
+        const fetchGallery = async () => {
+            try {
+                const res = await fetch('/api/gallery');
+                if (!res.ok) throw new Error('Failed to fetch');
+                const data = await res.json();
+                const dbItems = Array.isArray(data) ? data.map((item: any) => ({
+                    category: item.category,
+                    title: item.title,
+                    image: item.imageUrl,
+                    isFromDb: true,
+                    id: item.id
+                })) : [];
+                // Always show DB items first, then the original static items below
+                setItems([...dbItems, ...defaultGalleryItems]);
+            } catch (err) {
+                console.warn('API error, falling back to static gallery:', err);
+                setItems(defaultGalleryItems);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchGallery();
     }, []);
 
     return (
@@ -75,28 +102,32 @@ const Gallery: React.FC = () => {
 
             {/* Grid Section */}
             <section className="max-w-7xl mx-auto px-8 py-16 bg-[#f8f9fa]">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                    {galleryItems.map((item, index) => (
-                        <div key={index} className="bg-white group cursor-pointer tactical-shadow hover:-translate-y-1 transition-all duration-300 border border-gray-100">
-                            <div className="aspect-[4/3] overflow-hidden">
-                                <img
-                                    src={item.image}
-                                    alt={item.title}
-                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                />
-                            </div>
-                            <div className="p-6">
-                                <div className="text-[10px] font-bold text-red-600 uppercase tracking-widest mb-2">
-                                    {item.category}
+                {loading ? (
+                    <div className="text-center py-12 text-slate-500 font-medium">Loading gallery images...</div>
+                ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 animate-in fade-in duration-300">
+                        {items.map((item, index) => (
+                            <div key={index} className="bg-white group cursor-pointer tactical-shadow hover:-translate-y-1 transition-all duration-300 border border-gray-100">
+                                <div className="aspect-[4/3] overflow-hidden">
+                                    <img
+                                        src={item.image}
+                                        alt={item.title}
+                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                    />
                                 </div>
-                                <h3 className="font-headline text-lg font-bold text-slate-800 mb-3 group-hover:text-primary transition-colors">
-                                    {item.title}
-                                </h3>
-                                <div className="w-8 h-1 bg-slate-300 group-hover:bg-primary transition-colors"></div>
+                                <div className="p-6">
+                                    <div className="text-[10px] font-bold text-red-600 uppercase tracking-widest mb-2">
+                                        {item.category}
+                                    </div>
+                                    <h3 className="font-headline text-lg font-bold text-slate-800 mb-3 group-hover:text-primary transition-colors">
+                                        {item.title}
+                                    </h3>
+                                    <div className="w-8 h-1 bg-slate-300 group-hover:bg-primary transition-colors"></div>
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
+                )}
             </section>
 
             {/* Call to Action */}
