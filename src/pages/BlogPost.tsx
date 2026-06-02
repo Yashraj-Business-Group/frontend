@@ -41,7 +41,7 @@ const BlogPost = () => {
   return (
     <article className="bg-surface-container-lowest min-h-screen pb-24">
       {/* Hero Header */}
-      <div className="relative pt-32 pb-24 px-8 bg-primary text-white overflow-hidden">
+      <div className="relative pt-24 pb-16 px-5 md:px-8 bg-primary text-white overflow-hidden">
         {blog.coverImage && (
           <div className="absolute inset-0 z-0">
             <img src={blog.coverImage} alt={blog.title} className="w-full h-full object-cover opacity-20" />
@@ -63,8 +63,8 @@ const BlogPost = () => {
       </div>
 
       {/* Content Body */}
-      <div className="max-w-4xl mx-auto px-8 -mt-12 relative z-20">
-        <div className="bg-white p-8 md:p-16 tactical-shadow prose prose-lg prose-slate max-w-none prose-headings:font-headline prose-headings:text-primary prose-a:text-primary font-medium text-slate-700 whitespace-pre-wrap">
+      <div className="max-w-4xl mx-auto px-4 md:px-8 -mt-8 md:-mt-12 relative z-20">
+        <div className="bg-white p-5 sm:p-8 md:p-16 tactical-shadow prose prose-lg prose-slate max-w-none prose-headings:font-headline prose-headings:text-primary prose-a:text-primary font-medium text-slate-700 whitespace-pre-wrap overflow-x-hidden break-words">
           {blog.content}
         </div>
       </div>
