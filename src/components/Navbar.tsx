@@ -28,9 +28,23 @@ const Navbar: React.FC = () => {
     setIsServicesOpen(false);
   }, [path]);
 
-  // Lock body scroll when mobile menu is open (iOS-safe + blocks touch scroll via CSS)
+  // Lock body scroll when mobile menu is open (iOS-safe + smart touchmove block)
   useEffect(() => {
     const html = document.documentElement;
+
+    // Track whether the touch STARTED outside the drawer.
+    // Only block touchmove for those touches — leaves drawer clicks untouched.
+    let touchStartedOutside = false;
+
+    const onTouchStart = (e: TouchEvent) => {
+      touchStartedOutside = !(drawerRef.current?.contains(e.target as Node));
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      if (touchStartedOutside) {
+        e.preventDefault();
+      }
+    };
 
     if (isMobileMenuOpen) {
       const scrollY = window.scrollY;
@@ -40,6 +54,8 @@ const Navbar: React.FC = () => {
       document.body.style.width = '100%';
       html.style.overflow = 'hidden';
       document.body.classList.add('menu-open');
+      document.addEventListener('touchstart', onTouchStart, { passive: true });
+      document.addEventListener('touchmove', onTouchMove, { passive: false });
     } else {
       const scrollY = document.body.style.top;
       document.body.classList.remove('menu-open');
@@ -54,6 +70,8 @@ const Navbar: React.FC = () => {
     }
 
     return () => {
+      document.removeEventListener('touchstart', onTouchStart);
+      document.removeEventListener('touchmove', onTouchMove);
       document.body.classList.remove('menu-open');
       const scrollY = document.body.style.top;
       document.body.style.overflow = '';
