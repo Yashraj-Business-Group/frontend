@@ -22,6 +22,7 @@ import ServiceDetail from './pages/ServiceDetail';
 import Login from './pages/admin/Login';
 import JobApplications from './pages/admin/JobApplications';
 import ServiceRequests from './pages/admin/ServiceRequests';
+import ManageGallery from './pages/admin/ManageGallery';
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function App() {
         <Route path="requests" element={<ServiceRequests />} />
         <Route path="jobs" element={<JobApplications />} />
         <Route path="partners" element={<AdminPartners />} />
+        <Route path="gallery" element={<ManageGallery />} />
         <Route path="users" element={<div className="p-8">Users Coming Soon</div>} />
         <Route path="settings" element={<div className="p-8">Settings Coming Soon</div>} />
         <Route path="blogs" element={<ManageBlogs />} />

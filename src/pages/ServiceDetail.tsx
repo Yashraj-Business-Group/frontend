@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Shield, Droplets, Building2, Users, FileSignature, Landmark, Calculator, ArrowRight } from 'lucide-react';
+import { Shield, Droplets, Building2, Users, FileSignature, Landmark, Calculator, ArrowRight, BadgeCheck } from 'lucide-react';
 
 // Mock database of services
 const servicesData: Record<string, any> = {
@@ -108,6 +108,26 @@ const servicesData: Record<string, any> = {
       'Accounting & Bookkeeping',
     ],
     image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
+  },
+  'psara-licensing': {
+    title: 'PSARA Licensing Services',
+    icon: BadgeCheck,
+    color: 'bg-[#002451]',
+    textColor: 'text-[#002451]',
+    description: 'At Yashraj Taxway Consultancy, we provide comprehensive consultancy and compliance solutions for obtaining and maintaining PSARA (Private Security Agencies Regulation Act) Licenses across India. Our experienced team ensures a smooth, efficient, and legally compliant licensing process for security agencies.',
+    details: [
+      'PSARA License Registration',
+      'New License Application Processing',
+      'PSARA License Renewal',
+      'State-wise Licensing Assistance',
+      'Documentation & Compliance Management',
+      'Police Verification Coordination',
+      'Training Institute MOU Drafting',
+      'Regulatory Compliance Advisory',
+      'Security Agency Startup Consultancy',
+      'Business Registration & Allied Compliance Support',
+    ],
+    image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
   }
 };
 
