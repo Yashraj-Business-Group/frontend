@@ -115,7 +115,7 @@ const Navbar: React.FC = () => {
               href={social.href}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center justify-center rounded-full border border-[#D1D9E6] bg-white/95 p-2 md:p-2.5 shadow-sm backdrop-blur transition-all duration-200 hover:bg-[#F5F7FB] hover:border-[#002451]/20 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#002451]/20"
+              className="hidden lg:inline-flex items-center justify-center rounded-full border border-[#D1D9E6] bg-white/95 p-2 md:p-2.5 shadow-sm backdrop-blur transition-all duration-200 hover:bg-[#F5F7FB] hover:border-[#002451]/20 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#002451]/20"
               aria-label={social.name}
             >
               <img
@@ -170,7 +170,29 @@ const Navbar: React.FC = () => {
           <Link to="/contact" className={`text-lg font-bold py-3 border-b border-gray-100 ${isActive('/contact') ? 'text-primary' : 'text-slate-700'}`}>Contact</Link>
         </div>
         
-        <div className="p-6 border-t border-gray-100">
+        <div className="p-6 border-t border-gray-100 flex flex-col gap-4">
+          {/* Social Icons in Drawer */}
+          <div className="flex items-center justify-center gap-4">
+            {socialLinks.map((social) => (
+              <a
+                key={social.name}
+                href={social.href}
+                target="_blank"
+                rel="noreferrer"
+                className="flex flex-col items-center gap-1 group"
+                aria-label={social.name}
+              >
+                <span className="inline-flex items-center justify-center rounded-full border border-[#D1D9E6] bg-white p-3 shadow-sm transition-all duration-200 group-hover:bg-[#F5F7FB] group-hover:border-[#002451]/20 group-hover:scale-105 active:scale-95">
+                  <img
+                    src={`/${social.badge}`}
+                    alt={`${social.name} logo`}
+                    className="w-6 h-6 rounded-full object-cover bg-white"
+                  />
+                </span>
+                <span className="text-xs text-slate-500 font-medium">{social.name}</span>
+              </a>
+            ))}
+          </div>
           <a href="tel:+918090785907" className="w-full block text-center tactical-gradient text-white py-4 font-bold uppercase tracking-wider text-sm rounded">
             Call Us Now
           </a>
