@@ -7,6 +7,7 @@ const Navbar: React.FC = () => {
   const path = location.pathname;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isServicesOpen, setIsServicesOpen] = useState(false); // For mobile accordion
+  const drawerRef = useRef<HTMLDivElement>(null);
 
   const isActive = (route: string) => {
     if (route === '/') return path === '/';
@@ -27,14 +28,43 @@ const Navbar: React.FC = () => {
     setIsServicesOpen(false);
   }, [path]);
 
-  // Lock body scroll when mobile menu is open
+  // Lock body scroll when mobile menu is open (iOS-safe + blocks touch scroll via CSS)
   useEffect(() => {
+    const html = document.documentElement;
+
     if (isMobileMenuOpen) {
+      const scrollY = window.scrollY;
       document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      html.style.overflow = 'hidden';
+      document.body.classList.add('menu-open');
     } else {
-      document.body.style.overflow = 'unset';
+      const scrollY = document.body.style.top;
+      document.body.classList.remove('menu-open');
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      html.style.overflow = '';
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      }
     }
-    return () => { document.body.style.overflow = 'unset'; }
+
+    return () => {
+      document.body.classList.remove('menu-open');
+      const scrollY = document.body.style.top;
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      html.style.overflow = '';
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      }
+    };
   }, [isMobileMenuOpen]);
 
 
@@ -136,7 +166,7 @@ const Navbar: React.FC = () => {
       <div className={`fixed inset-0 bg-[#002451]/60 backdrop-blur-sm z-[60] lg:hidden transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`} onClick={() => setIsMobileMenuOpen(false)}></div>
       
       {/* Mobile Menu Panel */}
-      <div className={`fixed top-0 right-0 h-[100dvh] w-[85%] max-w-sm bg-white z-[60] lg:hidden transform transition-transform duration-300 ease-in-out shadow-2xl flex flex-col ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+      <div ref={drawerRef} className={`fixed top-0 right-0 h-[100dvh] w-[85%] max-w-sm bg-white z-[60] lg:hidden transform transition-transform duration-300 ease-in-out shadow-2xl flex flex-col ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         <div className="h-20 border-b border-gray-100 flex items-center justify-between px-6">
           <span className="font-headline font-black text-xl text-[#002451] uppercase">Menu</span>
           <button onClick={() => setIsMobileMenuOpen(false)} className="text-[#002451] p-1 hover:bg-slate-100 rounded-full transition-colors flex items-center justify-center">
@@ -144,7 +174,7 @@ const Navbar: React.FC = () => {
           </button>
         </div>
         
-        <div className="flex-1 overflow-y-auto py-6 px-6 flex flex-col gap-2">
+        <div className="flex-1 overflow-y-auto drawer-scroll-area py-6 px-6 flex flex-col gap-2">
           <Link to="/" className={`text-lg font-bold py-3 border-b border-gray-100 ${isActive('/') ? 'text-primary' : 'text-slate-700'}`}>Home</Link>
           <Link to="/company-profile" className={`text-lg font-bold py-3 border-b border-gray-100 ${isActive('/company-profile') ? 'text-primary' : 'text-slate-700'}`}>About Us</Link>
           

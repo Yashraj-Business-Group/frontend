@@ -90,4 +90,14 @@
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
+
+  /* Applied to <body> when mobile menu is open to block background touch scroll */
+  body.menu-open {
+    touch-action: none;
+  }
+
+  /* Applied to the drawer's scrollable inner content to re-enable vertical scroll */
+  .drawer-scroll-area {
+    touch-action: pan-y;
+  }
 }
