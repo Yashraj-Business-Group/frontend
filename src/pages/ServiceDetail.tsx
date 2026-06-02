@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Shield, Droplets, Building2, Users, FileSignature, Landmark, Calculator, ArrowRight, BadgeCheck } from 'lucide-react';
+import { Shield, Droplets, Building2, Users, FileSignature, Landmark, Calculator, ArrowRight, BadgeCheck, ZoomIn, X, CheckCircle } from 'lucide-react';
 
 // Mock database of services
 const servicesData: Record<string, any> = {
@@ -127,14 +127,16 @@ const servicesData: Record<string, any> = {
       'Security Agency Startup Consultancy',
       'Business Registration & Allied Compliance Support',
     ],
-    image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
+    image: '/psara-license.jpg'
   }
 };
 
 const ServiceDetail = () => {
   const { serviceId } = useParams();
   const [formData, setFormData] = useState({ fullName: '', companyName: '', email: '', phoneNumber: '+91 ', additionalReqs: '' });
+  const [isImageExpanded, setIsImageExpanded] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const isPsara = serviceId === 'psara-licensing';
 
   // Ensure the route matches a valid service, otherwise show 404/fallback
   const service = serviceId ? servicesData[serviceId] : null;
@@ -212,9 +214,44 @@ const ServiceDetail = () => {
 
           {/* Left Content (Image & Details) */}
           <div className="lg:col-span-2 space-y-12">
-            <div className="bg-white p-2 rounded-lg tactical-shadow">
-              <div className="aspect-[21/9] rounded overflow-hidden relative bg-slate-200">
-                <img src={service.image} alt={service.title} className="w-full h-full object-cover" />
+            {/* Interactive Image / Certificate Viewer */}
+            <div
+              className="group relative cursor-zoom-in"
+              onClick={() => setIsImageExpanded(true)}
+            >
+              {/* Outer frame */}
+              <div className={`bg-white rounded-xl tactical-shadow overflow-hidden border ${
+                isPsara ? 'border-amber-200 p-3 md:p-5' : 'border-slate-100 p-2'
+              }`}>
+
+              {/* PSARA Certificate Badge */}
+                {isPsara && (
+                  <div className="flex items-center gap-2 mb-3 px-1">
+                    <CheckCircle className="w-4 h-4 text-emerald-500 shrink-0" />
+                    <span className="text-xs font-bold text-emerald-700 uppercase tracking-widest">Government of Maharashtra — Certified Document</span>
+                  </div>
+                )}
+
+                {/* Landscape image container */}
+                <div className="relative rounded-lg aspect-[21/9] overflow-hidden">
+                  <img
+                    src={service.image}
+                    alt={service.title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+                  />
+
+                  {/* Hover overlay */}
+                  <div className="absolute inset-0 bg-[#002451]/0 group-hover:bg-[#002451]/30 transition-all duration-300 flex items-center justify-center">
+                    <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 scale-90 group-hover:scale-100 bg-white/90 backdrop-blur-sm rounded-full px-5 py-3 flex items-center gap-2 shadow-xl">
+                      <ZoomIn className="w-5 h-5 text-[#002451]" />
+                      <span className="text-sm font-bold text-[#002451] uppercase tracking-widest">View Full</span>
+                    </div>
+                  </div>
+                </div>
+
+                {isPsara && (
+                  <p className="text-center text-[11px] text-slate-400 font-medium mt-3 uppercase tracking-widest">Tap to expand · Valid 24/04/2026 – 23/04/2031</p>
+                )}
               </div>
             </div>
 
@@ -310,6 +347,36 @@ const ServiceDetail = () => {
         </div>
       </section>
 
+      {/* Fullscreen image lightbox */}
+      {isImageExpanded && (
+        <div
+          className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 md:p-8 animate-in fade-in duration-200"
+          onClick={() => setIsImageExpanded(false)}
+        >
+          <button
+            className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 border border-white/20 text-white flex items-center justify-center hover:bg-white/20 transition-colors z-10"
+            onClick={() => setIsImageExpanded(false)}
+          >
+            <X className="w-5 h-5" />
+          </button>
+          <div
+            className="relative max-w-2xl w-full animate-in zoom-in-95 duration-200"
+            onClick={e => e.stopPropagation()}
+          >
+            <img
+              src={service.image}
+              alt={service.title}
+              className="w-full h-auto object-contain rounded-xl shadow-2xl ring-1 ring-white/10 max-h-[90dvh]"
+            />
+            {isPsara && (
+              <div className="mt-3 flex items-center justify-center gap-2">
+                <CheckCircle className="w-4 h-4 text-emerald-400" />
+                <span className="text-xs text-emerald-300 font-semibold uppercase tracking-widest">Government Certified · Maharashtra · Valid till 23/04/2031</span>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
