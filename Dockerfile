@@ -12,16 +12,13 @@ COPY . .
 RUN npm run build
 
 # Production stage
-FROM nginx:alpine
+FROM caddy:alpine
 
-# Copy custom Nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy custom Caddy configuration
+COPY Caddyfile /etc/caddy/Caddyfile
 
 # Copy built React assets from the build stage
-COPY --from=build /app/dist /usr/share/nginx/html
+COPY --from=build /app/dist /usr/share/caddy
 
-# Expose port 80
-EXPOSE 80
-
-# Start Nginx server
-CMD ["nginx", "-g", "daemon off;"]
+# Expose ports for HTTP and HTTPS
+EXPOSE 80 443
