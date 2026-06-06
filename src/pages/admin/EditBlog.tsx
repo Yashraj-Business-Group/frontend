@@ -18,7 +18,10 @@ const EditBlog = () => {
   useEffect(() => {
     const fetchBlog = async () => {
       try {
-        const res = await fetch(`/api/admin/blogs`);
+        const token = localStorage.getItem('adminToken');
+        const res = await fetch(`/api/admin/blogs`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
         const data = await res.json();
         const blog = data.find((b: any) => b.id === id);
         if (blog) {
@@ -84,6 +87,7 @@ const EditBlog = () => {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           title,

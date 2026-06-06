@@ -5,8 +5,16 @@ const ServiceRequests = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/admin/requests')
-      .then(res => res.json())
+    const token = localStorage.getItem('adminToken');
+    fetch('/api/admin/requests', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to fetch requests');
+        return res.json();
+      })
       .then(data => {
         setRequests(data);
         setLoading(false);

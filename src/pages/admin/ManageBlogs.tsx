@@ -9,7 +9,10 @@ const ManageBlogs = () => {
 
   const fetchBlogs = async () => {
     try {
-      const res = await fetch('/api/admin/blogs');
+      const token = localStorage.getItem('adminToken');
+      const res = await fetch('/api/admin/blogs', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
       if (!res.ok) throw new Error('Failed to fetch blogs');
       const data = await res.json();
       setBlogs(data);
@@ -26,9 +29,13 @@ const ManageBlogs = () => {
 
   const toggleVisibility = async (id: string, currentStatus: boolean) => {
     try {
+      const token = localStorage.getItem('adminToken');
       const res = await fetch(`/api/blogs/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ isPublished: !currentStatus })
       });
       if (!res.ok) throw new Error('Failed to update status');
@@ -44,8 +51,10 @@ const ManageBlogs = () => {
     if (!window.confirm('Are you sure you want to delete this blog?')) return;
     
     try {
+      const token = localStorage.getItem('adminToken');
       const res = await fetch(`/api/blogs/${id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
       });
       if (!res.ok) throw new Error('Failed to delete blog');
       

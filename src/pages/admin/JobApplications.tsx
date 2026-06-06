@@ -21,7 +21,10 @@ const JobApplications = () => {
 
   const fetchApplications = async () => {
     try {
-      const res = await fetch('/api/admin/applications');
+      const token = localStorage.getItem('adminToken');
+      const res = await fetch('/api/admin/applications', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
       if (res.ok) setApplications(await res.json());
     } catch (e) { console.error(e); }
   };
@@ -34,9 +37,13 @@ const JobApplications = () => {
   const handleRoleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      const token = localStorage.getItem('adminToken');
       const res = await fetch('/api/admin/jobs', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify(roleForm)
       });
       if (res.ok) {
@@ -50,7 +57,11 @@ const JobApplications = () => {
   const deleteRole = async (id: string) => {
     if (!window.confirm('Are you sure you want to delete this role?')) return;
     try {
-      const res = await fetch(`/api/admin/jobs/${id}`, { method: 'DELETE' });
+      const token = localStorage.getItem('adminToken');
+      const res = await fetch(`/api/admin/jobs/${id}`, { 
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
       if (res.ok) fetchJobs();
     } catch (e) { console.error(e); }
   };

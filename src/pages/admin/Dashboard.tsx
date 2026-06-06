@@ -10,9 +10,11 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const token = localStorage.getItem('adminToken');
+        const headers = { 'Authorization': `Bearer ${token}` };
         const [reqRes, appRes] = await Promise.all([
-          fetch('/api/admin/requests'),
-          fetch('/api/admin/applications')
+          fetch('/api/admin/requests', { headers }),
+          fetch('/api/admin/applications', { headers })
         ]);
         
         if (reqRes.ok) setRequests(await reqRes.json());
