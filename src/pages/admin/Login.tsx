@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Lock, Mail } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { Lock, Mail, ArrowLeft } from 'lucide-react';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -42,7 +42,22 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md relative">
+        <Link 
+          to="/" 
+          className="absolute left-0 top-1/2 -translate-y-1/2 -ml-12 lg:-ml-24 p-2 text-gray-400 hover:text-gray-600 transition-colors hidden sm:flex items-center gap-2"
+          aria-label="Back to Home"
+        >
+          <ArrowLeft className="w-6 h-6" />
+          <span className="text-sm font-medium">Home</span>
+        </Link>
+        <Link 
+          to="/" 
+          className="sm:hidden absolute left-4 top-0 p-2 text-gray-400 hover:text-gray-600 transition-colors flex items-center gap-2"
+          aria-label="Back to Home"
+        >
+          <ArrowLeft className="w-5 h-5" />
+        </Link>
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
           Admin Portal
         </h2>

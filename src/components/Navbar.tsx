@@ -153,7 +153,7 @@ const Navbar: React.FC = () => {
 
         {/* Right Corner Actions */}
         <div className="flex items-center gap-2 sm:gap-3 z-50">
-          <Link to="/admin/login" className="inline-flex items-center justify-center rounded-full border border-[#D1D9E6] bg-white/95 p-2 md:p-2.5 text-[#002451] shadow-sm backdrop-blur transition-all duration-200 hover:bg-[#F5F7FB] hover:border-[#002451]/20 focus:outline-none focus:ring-2 focus:ring-[#002451]/20" aria-label="Admin Login">
+          <Link to="/admin/login" className="hidden lg:inline-flex items-center justify-center rounded-full border border-[#D1D9E6] bg-white/95 p-2 md:p-2.5 text-[#002451] shadow-sm backdrop-blur transition-all duration-200 hover:bg-[#F5F7FB] hover:border-[#002451]/20 focus:outline-none focus:ring-2 focus:ring-[#002451]/20" aria-label="Admin Login">
             <User className="w-4 h-4 md:w-5 md:h-5" />
           </Link>
           
@@ -216,6 +216,7 @@ const Navbar: React.FC = () => {
           <Link to="/job-portal" className={`text-lg font-bold py-3 border-b border-gray-100 ${isActive('/job-portal') ? 'text-primary' : 'text-slate-700'}`}>Career</Link>
           <Link to="/blog" className={`text-lg font-bold py-3 border-b border-gray-100 ${isActive('/blog') ? 'text-primary' : 'text-slate-700'}`}>Blog</Link>
           <Link to="/contact" className={`text-lg font-bold py-3 border-b border-gray-100 ${isActive('/contact') ? 'text-primary' : 'text-slate-700'}`}>Contact</Link>
+          <Link to="/admin/login" className={`text-lg font-bold py-3 border-b border-gray-100 ${isActive('/admin/login') ? 'text-primary' : 'text-slate-700'}`}>Admin Login</Link>
         </div>
         
         <div className="p-6 border-t border-gray-100 flex flex-col gap-4">
