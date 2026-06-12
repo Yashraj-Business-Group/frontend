@@ -184,7 +184,7 @@ const Navbar: React.FC = () => {
       <div className={`fixed inset-0 bg-[#002451]/60 backdrop-blur-sm z-[60] lg:hidden transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`} onClick={() => setIsMobileMenuOpen(false)}></div>
       
       {/* Mobile Menu Panel */}
-      <div ref={drawerRef} className={`fixed top-0 right-0 h-[100dvh] w-[85%] max-w-sm bg-white z-[60] lg:hidden transform transition-transform duration-300 ease-in-out shadow-2xl flex flex-col ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+      <div ref={drawerRef} className={`fixed top-0 right-0 h-[100dvh] w-[85%] max-w-sm bg-white z-[60] lg:hidden transform transition-all duration-300 ease-in-out shadow-2xl flex flex-col ${isMobileMenuOpen ? 'translate-x-0 visible' : 'translate-x-full invisible'}`}>
         <div className="h-20 border-b border-gray-100 flex items-center justify-between px-6">
           <span className="font-headline font-black text-xl text-[#002451] uppercase">Menu</span>
           <button onClick={() => setIsMobileMenuOpen(false)} className="text-[#002451] p-1 hover:bg-slate-100 rounded-full transition-colors flex items-center justify-center">
