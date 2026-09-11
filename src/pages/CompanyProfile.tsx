@@ -1,7 +1,12 @@
 import React from 'react';
 import { Target, Shield, Users, Award, CheckCircle2 } from 'lucide-react';
+import { useSEO } from '../hooks/useSEO';
 
 const CompanyProfile = () => {
+    useSEO({
+        title: 'Company Profile',
+        description: 'Learn about Yashraj Business Group\'s legacy, mission, and values as a trusted provider of security and facility management solutions.'
+    });
     return (
         <div className="w-full bg-surface-bright pb-24">
             {/* Hero Section */}
