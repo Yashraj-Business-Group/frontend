@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Save, Image as ImageIcon, Upload } from 'lucide-react';
 import { supabase } from '../../supabase';
+import { validateFile, IMAGE_UPLOAD_RULES } from '../../utils/validateFile';
+import { sanitizeFields } from '../../utils/sanitizeText';
 
 const EditBlog = () => {
   const { id } = useParams();
@@ -18,19 +20,19 @@ const EditBlog = () => {
   useEffect(() => {
     const fetchBlog = async () => {
       try {
-        const token = localStorage.getItem('adminToken');
-        const res = await fetch(`/api/admin/blogs`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const data = await res.json();
-        const blog = data.find((b: any) => b.id === id);
-        if (blog) {
+        const { data: blog, error: fetchErr } = await supabase
+          .from('Blog')
+          .select('*')
+          .eq('id', id)
+          .single();
+        
+        if (fetchErr || !blog) {
+          setError('Blog not found');
+        } else {
           setTitle(blog.title);
           setCoverImage(blog.coverImage || '');
           setContent(blog.content);
           setIsPublished(blog.isPublished);
-        } else {
-          setError('Blog not found');
         }
       } catch (err: any) {
         setError(err.message);
@@ -38,11 +40,18 @@ const EditBlog = () => {
         setFetching(false);
       }
     };
-    fetchBlog();
+    if (id) fetchBlog();
   }, [id]);
 
   const handleImageUpload = async (file: File) => {
     if (!file) return;
+
+    const validationError = validateFile(file, IMAGE_UPLOAD_RULES);
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
     setUploadingImage(true);
     setError('');
 
@@ -73,33 +82,27 @@ const EditBlog = () => {
     setLoading(true);
     setError('');
 
-    const userStr = localStorage.getItem('adminUser');
-    const token = localStorage.getItem('adminToken');
-    
-    if (!userStr || !token) {
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
       setError('You must be logged in to edit a blog.');
       setLoading(false);
       return;
     }
 
     try {
-      const res = await fetch(`/api/blogs/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
+      const { error: updateErr } = await supabase
+        .from('Blog')
+        .update(sanitizeFields({
           title,
           content,
           coverImage,
           isPublished,
-        })
-      });
+        }, 20000))
+        .eq('id', id);
 
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || 'Failed to update blog');
+      if (updateErr) {
+        throw new Error(updateErr.message || 'Failed to update blog');
       }
 
       navigate('/admin/blogs');

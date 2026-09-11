@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, Edit, Trash2, Eye, EyeOff } from 'lucide-react';
+import { supabase } from '../../supabase';
 
 const ManageBlogs = () => {
   const [blogs, setBlogs] = useState<any[]>([]);
@@ -9,13 +10,12 @@ const ManageBlogs = () => {
 
   const fetchBlogs = async () => {
     try {
-      const token = localStorage.getItem('adminToken');
-      const res = await fetch('/api/admin/blogs', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (!res.ok) throw new Error('Failed to fetch blogs');
-      const data = await res.json();
-      setBlogs(data);
+      const { data, error: fetchErr } = await supabase
+        .from('Blog')
+        .select('*')
+        .order('createdAt', { ascending: false });
+      if (fetchErr) throw fetchErr;
+      setBlogs(data || []);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -29,16 +29,11 @@ const ManageBlogs = () => {
 
   const toggleVisibility = async (id: string, currentStatus: boolean) => {
     try {
-      const token = localStorage.getItem('adminToken');
-      const res = await fetch(`/api/blogs/${id}`, {
-        method: 'PUT',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ isPublished: !currentStatus })
-      });
-      if (!res.ok) throw new Error('Failed to update status');
+      const { error: updateErr } = await supabase
+        .from('Blog')
+        .update({ isPublished: !currentStatus })
+        .eq('id', id);
+      if (updateErr) throw updateErr;
       
       // Update local state
       setBlogs(blogs.map(b => b.id === id ? { ...b, isPublished: !currentStatus } : b));
@@ -51,14 +46,11 @@ const ManageBlogs = () => {
     if (!window.confirm('Are you sure you want to delete this blog?')) return;
     
     try {
-      const token = localStorage.getItem('adminToken');
-      const res = await fetch(`/api/blogs/${id}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (!res.ok) throw new Error('Failed to delete blog');
-      
-      // Update local state
+      const { error: deleteErr } = await supabase
+        .from('Blog')
+        .delete()
+        .eq('id', id);
+      if (deleteErr) throw deleteErr;
       setBlogs(blogs.filter(b => b.id !== id));
     } catch (err: any) {
       alert(err.message);

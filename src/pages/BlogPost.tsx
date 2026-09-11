@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { supabase } from '../supabase';
+import { useSEO } from '../hooks/useSEO';
 
 interface Blog {
   id: string;
@@ -8,7 +10,7 @@ interface Blog {
   content: string;
   coverImage?: string;
   createdAt: string;
-  author: {
+  author?: {
     name: string;
   };
 }
@@ -19,12 +21,20 @@ const BlogPost = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  useSEO({
+    title: blog?.title || 'Blog',
+    description: blog ? blog.content.replace(/\s+/g, ' ').trim().slice(0, 160) : 'Read the latest insights from Yashraj Business Group.'
+  });
+
   useEffect(() => {
     const fetchBlog = async () => {
       try {
-        const res = await fetch(`/api/blogs/${slug}`);
-        if (!res.ok) throw new Error('Blog not found');
-        const data = await res.json();
+        const { data, error } = await supabase
+          .from('Blog')
+          .select('*')
+          .eq('slug', slug)
+          .single();
+        if (error || !data) throw new Error('Blog not found');
         setBlog(data);
       } catch (err: any) {
         setError(err.message);
@@ -32,7 +42,7 @@ const BlogPost = () => {
         setLoading(false);
       }
     };
-    fetchBlog();
+    if (slug) fetchBlog();
   }, [slug]);
 
   if (loading) return <div className="text-center py-40 text-slate-500 font-bold uppercase tracking-widest">Loading...</div>;

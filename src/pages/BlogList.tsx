@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { supabase } from '../supabase';
+import { useSEO } from '../hooks/useSEO';
 
 interface Blog {
   id: string;
@@ -7,22 +9,29 @@ interface Blog {
   slug: string;
   coverImage?: string;
   createdAt: string;
-  author: {
+  author?: {
     name: string;
   };
 }
 
 const BlogList = () => {
+  useSEO({
+    title: 'Insights & Blog',
+    description: 'Read the latest insights on security, facility management, and corporate solutions from Yashraj Business Group.'
+  });
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const res = await fetch('/api/blogs');
-        if (!res.ok) throw new Error('Failed to fetch blogs');
-        const data = await res.json();
-        setBlogs(data);
+        const { data, error } = await supabase
+          .from('Blog')
+          .select('*')
+          .eq('isPublished', true)
+          .order('createdAt', { ascending: false });
+        if (error) throw error;
+        setBlogs(data || []);
       } catch (err) {
         console.error(err);
       } finally {

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Save, Image as ImageIcon, Upload } from 'lucide-react';
 import { supabase } from '../../supabase';
+import { validateFile, IMAGE_UPLOAD_RULES } from '../../utils/validateFile';
+import { sanitizeFields } from '../../utils/sanitizeText';
 
 const CreateBlog = () => {
   const navigate = useNavigate();
@@ -15,6 +17,13 @@ const CreateBlog = () => {
 
   const handleImageUpload = async (file: File) => {
     if (!file) return;
+
+    const validationError = validateFile(file, IMAGE_UPLOAD_RULES);
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
     setUploadingImage(true);
     setError('');
 
@@ -45,38 +54,27 @@ const CreateBlog = () => {
     setLoading(true);
     setError('');
 
-    // Fetch user from local storage
-    const userStr = localStorage.getItem('adminUser');
-    const token = localStorage.getItem('adminToken');
-    
-    if (!userStr || !token) {
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
       setError('You must be logged in to create a blog.');
       setLoading(false);
       return;
     }
-    
-    const user = JSON.parse(userStr);
 
     try {
-      const res = await fetch('/api/blogs', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          // In a fully robust app, include Authorization header here:
-          // 'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          title,
-          content,
-          coverImage,
-          isPublished,
-          authorId: user.id
-        })
-      });
+      const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '') + '-' + Date.now();
+      const { error: insertErr } = await supabase.from('Blog').insert([sanitizeFields({
+        title,
+        slug,
+        content,
+        coverImage,
+        isPublished,
+        authorId: user.id || 'admin'
+      }, 20000)]);
 
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || 'Failed to create blog');
+      if (insertErr) {
+        throw new Error(insertErr.message || 'Failed to create blog');
       }
 
       // Success, redirect to blogs list or dashboard
