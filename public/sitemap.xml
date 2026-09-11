@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Static routes only. Blog posts (/blog/:slug) live in Supabase and are not
+  listed here since they change independently of deploys — see the note in
+  the SEO summary about generating those dynamically.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://yashrajbusinessgroup.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://yashrajbusinessgroup.com/company-profile</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://yashrajbusinessgroup.com/services</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://yashrajbusinessgroup.com/services/security-guard</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://yashrajbusinessgroup.com/services/house-keeping</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://yashrajbusinessgroup.com/services/facility-management</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://yashrajbusinessgroup.com/services/manpower-labour</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://yashrajbusinessgroup.com/services/contract-staffing</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://yashrajbusinessgroup.com/services/pf-esic</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://yashrajbusinessgroup.com/services/all-taxation</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://yashrajbusinessgroup.com/services/psara-licensing</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://yashrajbusinessgroup.com/job-portal</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://yashrajbusinessgroup.com/gallery</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://yashrajbusinessgroup.com/blog</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://yashrajbusinessgroup.com/contact</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+</urlset>
