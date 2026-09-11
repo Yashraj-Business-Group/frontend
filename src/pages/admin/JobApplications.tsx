@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Eye, Briefcase, FileText } from 'lucide-react';
+import { supabase } from '../../supabase';
+import { sanitizeFields } from '../../utils/sanitizeText';
 
 const JobApplications = () => {
   const [activeTab, setActiveTab] = useState<'roles' | 'applications'>('roles');
@@ -14,18 +16,21 @@ const JobApplications = () => {
 
   const fetchJobs = async () => {
     try {
-      const res = await fetch('/api/jobs');
-      if (res.ok) setJobs(await res.json());
+      const { data, error } = await supabase
+        .from('JobPosting')
+        .select('*')
+        .order('createdAt', { ascending: false });
+      if (!error && data) setJobs(data);
     } catch (e) { console.error(e); }
   };
 
   const fetchApplications = async () => {
     try {
-      const token = localStorage.getItem('adminToken');
-      const res = await fetch('/api/admin/applications', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (res.ok) setApplications(await res.json());
+      const { data, error } = await supabase
+        .from('JobApplication')
+        .select('*, job:JobPosting(title, location)')
+        .order('createdAt', { ascending: false });
+      if (!error && data) setApplications(data);
     } catch (e) { console.error(e); }
   };
 
@@ -37,16 +42,8 @@ const JobApplications = () => {
   const handleRoleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('adminToken');
-      const res = await fetch('/api/admin/jobs', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(roleForm)
-      });
-      if (res.ok) {
+      const { error } = await supabase.from('JobPosting').insert([sanitizeFields(roleForm, 5000)]);
+      if (!error) {
         setIsRoleModalOpen(false);
         setRoleForm({ title: '', location: '', type: 'Full-Time', salaryRange: '', description: '', isActive: true });
         fetchJobs();
@@ -57,12 +54,8 @@ const JobApplications = () => {
   const deleteRole = async (id: string) => {
     if (!window.confirm('Are you sure you want to delete this role?')) return;
     try {
-      const token = localStorage.getItem('adminToken');
-      const res = await fetch(`/api/admin/jobs/${id}`, { 
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (res.ok) fetchJobs();
+      const { error } = await supabase.from('JobPosting').delete().eq('id', id);
+      if (!error) fetchJobs();
     } catch (e) { console.error(e); }
   };
 

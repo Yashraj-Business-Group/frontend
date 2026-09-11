@@ -9,6 +9,9 @@ import Contact from './pages/Contact';
 import BlogList from './pages/BlogList';
 import BlogPost from './pages/BlogPost';
 import Gallery from './pages/Gallery';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
+import Sitemap from './pages/Sitemap';
 
 import PublicLayout from './layouts/PublicLayout';
 import AdminLayout from './layouts/AdminLayout';
@@ -40,6 +43,9 @@ function App() {
         <Route path="/blog" element={<BlogList />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
         <Route path="/gallery" element={<Gallery />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-of-service" element={<TermsOfService />} />
+        <Route path="/sitemap" element={<Sitemap />} />
       </Route>
 
       {/* Admin Login Route */}

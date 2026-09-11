@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Trash2, Edit2, Image as ImageIcon, Upload, X, Save, AlertCircle } from 'lucide-react';
 import { supabase } from '../../supabase';
+import { validateFile, IMAGE_UPLOAD_RULES } from '../../utils/validateFile';
+import { sanitizeFields } from '../../utils/sanitizeText';
 
 interface GalleryItem {
   id: string;
@@ -41,22 +43,16 @@ const ManageGallery = () => {
       setLoading(true);
       setError('');
       
-      const token = localStorage.getItem('adminToken');
-      const res = await fetch('/api/admin/gallery', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      const { data, error: fetchErr } = await supabase
+        .from('GalleryItem')
+        .select('*')
+        .order('createdAt', { ascending: false });
       
-      if (!res.ok) {
-        if (res.status === 401 || res.status === 403) {
-          throw new Error('Unauthorized access. Please log in again.');
-        }
-        throw new Error('Failed to fetch gallery items');
+      if (fetchErr) {
+        throw new Error(fetchErr.message || 'Failed to fetch gallery items');
       }
       
-      const data = await res.json();
-      setItems(data);
+      setItems(data || []);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -70,6 +66,13 @@ const ManageGallery = () => {
 
   const handleImageUpload = async (file: File) => {
     if (!file) return;
+
+    const validationError = validateFile(file, IMAGE_UPLOAD_RULES);
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
     setUploadingImage(true);
     setError('');
 
@@ -137,9 +140,9 @@ const ManageGallery = () => {
     setFormSubmitting(true);
     setError('');
 
-    const token = localStorage.getItem('adminToken');
-    if (!token) {
-      setError('No admin token found. Please log in.');
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      setError('You must be logged in. Please log in.');
       setFormSubmitting(false);
       return;
     }
@@ -159,27 +162,23 @@ const ManageGallery = () => {
     }
 
     try {
-      const payload = {
+      const payload = sanitizeFields({
         title,
-        category: finalCategory.trim(),
+        category: finalCategory,
         imageUrl
-      };
+      }, 300);
 
-      const url = editingItem ? `/api/admin/gallery/${editingItem.id}` : '/api/admin/gallery';
-      const method = editingItem ? 'PUT' : 'POST';
-
-      const res = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(payload)
-      });
-
-      if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(errData.error || 'Failed to save gallery item');
+      if (editingItem) {
+        const { error: updateErr } = await supabase
+          .from('GalleryItem')
+          .update(payload)
+          .eq('id', editingItem.id);
+        if (updateErr) throw updateErr;
+      } else {
+        const { error: insertErr } = await supabase
+          .from('GalleryItem')
+          .insert([payload]);
+        if (insertErr) throw insertErr;
       }
 
       setSuccess(editingItem ? 'Gallery item updated successfully!' : 'Gallery item created successfully!');
@@ -198,16 +197,13 @@ const ManageGallery = () => {
     if (!window.confirm('Are you sure you want to delete this gallery item?')) return;
 
     try {
-      const token = localStorage.getItem('adminToken');
-      const res = await fetch(`/api/admin/gallery/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      const { error: deleteErr } = await supabase
+        .from('GalleryItem')
+        .delete()
+        .eq('id', id);
 
-      if (!res.ok) {
-        throw new Error('Failed to delete gallery item');
+      if (deleteErr) {
+        throw new Error(deleteErr.message || 'Failed to delete gallery item');
       }
 
       setSuccess('Gallery item deleted successfully!');

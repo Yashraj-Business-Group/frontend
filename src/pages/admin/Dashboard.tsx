@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ShieldCheck, Briefcase, TrendingUp, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { supabase } from '../../supabase';
 
 const AdminDashboard = () => {
   const [requests, setRequests] = useState<any[]>([]);
@@ -10,15 +11,13 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem('adminToken');
-        const headers = { 'Authorization': `Bearer ${token}` };
         const [reqRes, appRes] = await Promise.all([
-          fetch('/api/admin/requests', { headers }),
-          fetch('/api/admin/applications', { headers })
+          supabase.from('ServiceRequest').select('*').order('createdAt', { ascending: false }),
+          supabase.from('JobApplication').select('*, job:JobPosting(title, location)').order('createdAt', { ascending: false })
         ]);
         
-        if (reqRes.ok) setRequests(await reqRes.json());
-        if (appRes.ok) setApplications(await appRes.json());
+        if (reqRes.data) setRequests(reqRes.data);
+        if (appRes.data) setApplications(appRes.data);
       } catch (e) {
         console.error(e);
       } finally {

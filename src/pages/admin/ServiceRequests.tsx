@@ -1,28 +1,26 @@
 import React, { useState, useEffect } from 'react';
+import { supabase } from '../../supabase';
 
 const ServiceRequests = () => {
   const [requests, setRequests] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('adminToken');
-    fetch('/api/admin/requests', {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    })
-      .then(res => {
-        if (!res.ok) throw new Error('Failed to fetch requests');
-        return res.json();
-      })
-      .then(data => {
-        setRequests(data);
-        setLoading(false);
-      })
-      .catch(err => {
+    const fetchRequests = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('ServiceRequest')
+          .select('*')
+          .order('createdAt', { ascending: false });
+        if (error) console.error(error);
+        else setRequests(data || []);
+      } catch (err) {
         console.error(err);
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+    fetchRequests();
   }, []);
 
   return (

@@ -1,21 +1,44 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Outlet, Link, useLocation, Navigate, useNavigate } from 'react-router-dom';
+import type { Session } from '@supabase/supabase-js';
 import { LayoutDashboard, Users, ShieldCheck, Settings, LogOut, Briefcase, Image, FileText, Images } from 'lucide-react';
+import { supabase } from '../supabase';
 
 const AdminLayout = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const token = localStorage.getItem('adminToken');
-  const userStr = localStorage.getItem('adminUser');
-  const user = userStr ? JSON.parse(userStr) : { name: 'Admin User', role: 'Super Admin' };
+  // `undefined` = still checking, `null` = confirmed logged out.
+  const [session, setSession] = useState<Session | null | undefined>(undefined);
 
-  if (!token) {
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => setSession(data.session));
+
+    const { data: subscription } = supabase.auth.onAuthStateChange((_event, newSession) => {
+      setSession(newSession);
+    });
+
+    return () => subscription.subscription.unsubscribe();
+  }, []);
+
+  if (session === undefined) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-surface-bright text-slate-500 font-medium">
+        Checking session...
+      </div>
+    );
+  }
+
+  if (!session) {
     return <Navigate to="/admin/login" replace />;
   }
 
-  const handleLogout = () => {
-    localStorage.removeItem('adminToken');
-    localStorage.removeItem('adminUser');
+  const user = {
+    name: session.user.user_metadata?.name || session.user.email || 'Admin User',
+    role: session.user.user_metadata?.role || 'Admin',
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
     navigate('/admin/login');
   };
 

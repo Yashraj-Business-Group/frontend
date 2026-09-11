@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Lock, Mail, ArrowLeft } from 'lucide-react';
+import { supabase } from '../../supabase';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -15,23 +16,21 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
+      const { data, error: authError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Login failed');
+      if (authError) {
+        throw new Error(authError.message || 'Login failed');
       }
 
-      // Save token and navigate
-      localStorage.setItem('adminToken', data.token);
-      localStorage.setItem('adminUser', JSON.stringify(data.user));
+      if (!data.session) {
+        throw new Error('Login did not return a valid session. Please try again.');
+      }
+
+      // Supabase persists the session itself (see src/supabase.ts); no need
+      // to duplicate it into our own localStorage keys.
       navigate('/admin');
     } catch (err: any) {
       setError(err.message);
