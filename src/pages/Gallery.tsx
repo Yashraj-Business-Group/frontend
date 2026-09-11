@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { supabase } from '../supabase';
+import { useSEO } from '../hooks/useSEO';
 
 const defaultGalleryItems = [
     {
@@ -13,38 +15,44 @@ const defaultGalleryItems = [
         image: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&q=80&w=800'
     },
     {
-        category: 'FACILITY',
-        title: 'FACILITY MANAGEMENT-CLEANING',
-        image: 'cleaning.jpeg'
+        category: 'SAFETY',
+        title: 'FIRE FIGHTER',
+        image: 'https://images.unsplash.com/photo-1542282811-943ef1a977c3?auto=format&fit=crop&q=80&w=800'
     },
     {
-        category: 'MANPOWER',
-        title: 'MANPOWER / LABOUR SUPPLY',
-        image: 'manpower.jpeg'
+        category: 'FACILITIES',
+        title: 'PUMP OPERATOR',
+        image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=800'
     },
     {
-        category: 'STAFFING',
-        title: 'CONTRACT STAFFING / PROJECT PLANNING',
-        image: 'management.jpeg'
+        category: 'MANAGEMENT',
+        title: 'FIELD OFFICER',
+        image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=800'
     },
     {
-        category: 'COMPLIANCE',
-        title: 'PF ESIC & P.TAX NEW REG.',
-        image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=800'
-    },
-    {
-        category: 'TAXATION',
-        title: 'ALL TAXATION WORK',
-        image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800'
+        category: 'EXECUTIVE',
+        title: 'OPERATION MANAGER',
+        image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=800'
     }
 ];
 
-const Gallery: React.FC = () => {
-    const [items, setItems] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
+interface GalleryItem {
+    category: string;
+    title: string;
+    image: string;
+    isFromDb?: boolean;
+    id?: string;
+}
 
+const Gallery: React.FC = () => {
+    useSEO({
+        title: 'Gallery',
+        description: 'View photos of Yashraj Business Group\'s security personnel, facility management teams, and operations in action.'
+    });
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-    const [selectedImage, setSelectedImage] = useState<any | null>(null);
+    const [items, setItems] = useState<GalleryItem[]>(defaultGalleryItems);
+    const [loading, setLoading] = useState(true);
+    const [selectedImage, setSelectedImage] = useState<GalleryItem | null>(null);
 
     // Close modal on Escape
     useEffect(() => {
@@ -60,9 +68,11 @@ const Gallery: React.FC = () => {
 
         const fetchGallery = async () => {
             try {
-                const res = await fetch('/api/gallery');
-                if (!res.ok) throw new Error('Failed to fetch');
-                const data = await res.json();
+                const { data, error } = await supabase
+                    .from('GalleryItem')
+                    .select('*')
+                    .order('createdAt', { ascending: false });
+                if (error) throw error;
                 const dbItems = Array.isArray(data) ? data.map((item: any) => ({
                     category: item.category,
                     title: item.title,
@@ -72,7 +82,7 @@ const Gallery: React.FC = () => {
                 })) : [];
                 setItems([...dbItems, ...defaultGalleryItems]);
             } catch (err) {
-                console.warn('API error, falling back to static gallery:', err);
+                console.warn('Supabase error, falling back to static gallery:', err);
                 setItems(defaultGalleryItems);
             } finally {
                 setLoading(false);

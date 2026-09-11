@@ -1,6 +1,15 @@
 import React from 'react';
+import { supabase } from '../supabase';
+import { sanitizeFields } from '../utils/sanitizeText';
+import { useSEO } from '../hooks/useSEO';
+import Honeypot from '../components/Honeypot';
+import { useRateLimit, formatRetryAfter } from '../hooks/useRateLimit';
 
 const Contact = () => {
+  useSEO({
+    title: 'Contact Us',
+    description: 'Get in touch with Yashraj Business Group for security deployment, facility management quotes, or corporate inquiries. Offices in Pune and Sangli.'
+  });
   const [formData, setFormData] = React.useState({
     fullName: '',
     companyName: '',
@@ -11,6 +20,9 @@ const Contact = () => {
   });
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [submitStatus, setSubmitStatus] = React.useState<'idle' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = React.useState('');
+  const [honeypot, setHoneypot] = React.useState('');
+  const { checkLimit, recordAttempt } = useRateLimit('service-request', 3, 60 * 60 * 1000);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -18,31 +30,35 @@ const Contact = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (honeypot) return; // bot filled the hidden field
+
+    const { allowed, retryAfterMs } = checkLimit();
+    if (!allowed) {
+      setErrorMessage(`You've submitted too many requests. Please try again in ${formatRetryAfter(retryAfterMs)}.`);
+      setSubmitStatus('error');
+      return;
+    }
+
     setIsSubmitting(true);
     setSubmitStatus('idle');
+    setErrorMessage('');
 
     try {
-      const res = await fetch('/api/requests', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+      recordAttempt();
+      const { error } = await supabase.from('ServiceRequest').insert([sanitizeFields(formData, 2000)]);
+      if (error) throw error;
+      setSubmitStatus('success');
+      setFormData({
+        fullName: '',
+        companyName: '',
+        email: '',
+        phoneNumber: '',
+        serviceRequired: '',
+        additionalReqs: ''
       });
-
-      if (res.ok) {
-        setSubmitStatus('success');
-        setFormData({
-          fullName: '',
-          companyName: '',
-          email: '',
-          phoneNumber: '',
-          serviceRequired: '',
-          additionalReqs: ''
-        });
-        setTimeout(() => setSubmitStatus('idle'), 5000);
-      } else {
-        setSubmitStatus('error');
-      }
+      setTimeout(() => setSubmitStatus('idle'), 5000);
     } catch (err) {
+      setErrorMessage('There was an error submitting your request. Please try again later.');
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
@@ -167,11 +183,12 @@ const Contact = () => {
                 {submitStatus === 'error' && (
                   <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-center gap-3">
                     <span className="material-symbols-outlined">error</span>
-                    There was an error submitting your request. Please try again later.
+                    {errorMessage || 'There was an error submitting your request. Please try again later.'}
                   </div>
                 )}
 
                 <form className="space-y-6" onSubmit={handleSubmit}>
+                    <Honeypot value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="relative group/input">
                             <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1 group-focus-within/input:text-[#002451] transition-colors">Full Name</label>

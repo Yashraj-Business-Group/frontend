@@ -1,7 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabase';
+import { validateFile, RESUME_UPLOAD_RULES } from '../utils/validateFile';
+import { sanitizeFields } from '../utils/sanitizeText';
+import Honeypot from '../components/Honeypot';
+import { useSEO } from '../hooks/useSEO';
+import { useRateLimit, formatRetryAfter } from '../hooks/useRateLimit';
 
 const JobPortal = () => {
+  useSEO({
+    title: 'Careers',
+    description: 'Join Yashraj Business Group\'s elite security and facility management teams. View open positions and apply online across 16+ cities.'
+  });
   const [jobs, setJobs] = useState<any[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedJob, setSelectedJob] = useState<any>(null);
@@ -11,12 +20,18 @@ const JobPortal = () => {
   const [formData, setFormData] = useState({ fullName: '', email: '', phoneNumber: '+91 ', resumeUrl: '', coverNote: '' });
   const [submitting, setSubmitting] = useState(false);
   const [uploadingResume, setUploadingResume] = useState(false);
+  const [honeypot, setHoneypot] = useState('');
 
   useEffect(() => {
-    fetch('/api/jobs')
-      .then(res => res.json())
-      .then(data => setJobs(data))
-      .catch(err => console.error(err));
+    supabase
+      .from('JobPosting')
+      .select('*')
+      .eq('isActive', true)
+      .order('createdAt', { ascending: false })
+      .then(({ data, error }) => {
+        if (error) console.error(error);
+        else setJobs(data || []);
+      });
   }, []);
 
   const openModal = (job: any) => {
@@ -36,6 +51,13 @@ const JobPortal = () => {
 
   const handleResumeUpload = async (file: File) => {
     if (!file) return;
+
+    const validationError = validateFile(file, RESUME_UPLOAD_RULES);
+    if (validationError) {
+      alert(validationError);
+      return;
+    }
+
     setUploadingResume(true);
     try {
       const fileExt = file.name.split('.').pop();
@@ -58,26 +80,42 @@ const JobPortal = () => {
     }
   };
 
+  const { checkLimit, recordAttempt } = useRateLimit('job-application', 5, 60 * 60 * 1000);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedJob) return;
+    if (honeypot) return; // bot filled the hidden field
+
+    const { allowed, retryAfterMs } = checkLimit();
+    if (!allowed) {
+      alert(`You've submitted too many applications. Please try again in ${formatRetryAfter(retryAfterMs)}.`);
+      return;
+    }
+
     setSubmitting(true);
-    
+
     try {
-      const res = await fetch(`/api/jobs/${selectedJob.id}/apply`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-      if (res.ok) {
+      recordAttempt();
+      const { error } = await supabase
+        .from('JobApplication')
+        .insert([sanitizeFields({
+          jobId: selectedJob.id,
+          fullName: formData.fullName,
+          email: formData.email,
+          phoneNumber: formData.phoneNumber,
+          resumeUrl: formData.resumeUrl
+        }, 2000)]);
+      
+      if (!error) {
         alert(`Application for ${selectedJob.title} submitted successfully!`);
         closeModal();
       } else {
-        alert('Failed to submit application. Please try again.');
+        alert('Failed to submit application.');
       }
-    } catch (e) {
-      console.error(e);
-      alert('An error occurred.');
+    } catch (err) {
+      console.error(err);
+      alert('Failed to submit application.');
     } finally {
       setSubmitting(false);
     }
@@ -161,6 +199,7 @@ const JobPortal = () => {
               <p className="text-sm text-slate-500 mb-8 font-medium">Position: <strong className="text-primary">{selectedJob.title}</strong></p>
               
               <form onSubmit={handleSubmit} className="space-y-5">
+                <Honeypot value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
                 <div className="relative group/input">
                   <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1 group-focus-within/input:text-[#002451] transition-colors">Full Name</label>
                   <div className="relative">
@@ -189,10 +228,11 @@ const JobPortal = () => {
                 <div className="relative group/input">
                   <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1 group-focus-within/input:text-[#002451] transition-colors">Resume / CV (Optional)</label>
                   <div className="relative flex items-center justify-center w-full h-16 bg-slate-50/80 border-2 border-dashed border-slate-300 rounded-md group-hover/input:border-slate-400 group-focus-within/input:border-[#002451] group-focus-within/input:bg-white transition-all cursor-pointer overflow-hidden">
-                    <input 
-                      type="file" 
+                    <input
+                      type="file"
+                      accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                       onChange={e => e.target.files && handleResumeUpload(e.target.files[0])}
-                      className="absolute inset-0 opacity-0 cursor-pointer z-10" 
+                      className="absolute inset-0 opacity-0 cursor-pointer z-10"
                     />
                     {uploadingResume ? (
                       <span className="text-sm text-slate-500 font-medium">Uploading...</span>
