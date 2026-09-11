@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useSEO } from '../hooks/useSEO';
 
 const clientLogos = [
   "l1.jpeg", "l2.jpeg", "l3.jpeg", "l4.jpeg", "l5.jpeg", "l6.jpeg", "l7.jpeg","anna1.png", "bks1.jpg", "bom1.png", "dbp1.jpg", "epfo1.jpg", "hmm1.jpg",
@@ -13,6 +14,10 @@ const galleryImages = [
 ];
 
 const Home: React.FC = () => {
+  useSEO({
+    title: 'Home',
+    description: 'Yashraj Business Group provides premium security, facility management, housekeeping, and manpower supply services across 16+ cities in India.'
+  });
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
   const [activeTestimonial, setActiveTestimonial] = useState<number | null>(null);
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);

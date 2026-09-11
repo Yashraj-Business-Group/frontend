@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Shield, Droplets, Building2, Users, FileSignature, Landmark, Calculator, ArrowRight, BadgeCheck, ZoomIn, X, CheckCircle } from 'lucide-react';
+import { supabase } from '../supabase';
+import { sanitizeFields } from '../utils/sanitizeText';
+import { useSEO } from '../hooks/useSEO';
+import Honeypot from '../components/Honeypot';
+import { useRateLimit, formatRetryAfter } from '../hooks/useRateLimit';
 
 // Mock database of services
 const servicesData: Record<string, any> = {
@@ -136,10 +141,16 @@ const ServiceDetail = () => {
   const [formData, setFormData] = useState({ fullName: '', companyName: '', email: '', phoneNumber: '+91 ', additionalReqs: '' });
   const [isImageExpanded, setIsImageExpanded] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [honeypot, setHoneypot] = useState('');
   const isPsara = serviceId === 'psara-licensing';
 
   // Ensure the route matches a valid service, otherwise show 404/fallback
   const service = serviceId ? servicesData[serviceId] : null;
+
+  useSEO({
+    title: service?.title || 'Service Not Found',
+    description: service?.description || 'Explore Yashraj Business Group\'s professional services.'
+  });
 
   useEffect(() => {
     // Scroll to top when loading a new service
@@ -157,24 +168,30 @@ const ServiceDetail = () => {
   }
 
   const IconComponent = service.icon;
+  const { checkLimit, recordAttempt } = useRateLimit('service-request', 3, 60 * 60 * 1000);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (honeypot) return; // bot filled the hidden field
+
+    const { allowed, retryAfterMs } = checkLimit();
+    if (!allowed) {
+      alert(`You've submitted too many requests. Please try again in ${formatRetryAfter(retryAfterMs)}.`);
+      return;
+    }
+
     setIsSubmitting(true);
-    
+
     try {
+      recordAttempt();
       const payload = {
         ...formData,
         serviceRequired: service.title
       };
 
-      const res = await fetch('/api/requests', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
+      const { error } = await supabase.from('ServiceRequest').insert([sanitizeFields(payload, 2000)]);
       
-      if (res.ok) {
+      if (!error) {
         alert(`Quotation requested for ${service.title}! We will contact you soon.`);
         setFormData({ fullName: '', companyName: '', email: '', phoneNumber: '+91 ', additionalReqs: '' });
       } else {
@@ -288,6 +305,7 @@ const ServiceDetail = () => {
               <p className="text-sm text-slate-500 mb-8 font-medium">Get a customized tactical plan for {service.title}.</p>
 
               <form onSubmit={handleSubmit} className="space-y-5">
+                <Honeypot value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
                 {/* Full Name */}
                 <div className="relative group/input">
                   <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1 group-focus-within/input:text-[#002451] transition-colors">Full Name</label>

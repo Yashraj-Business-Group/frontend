@@ -1,7 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useSEO } from '../hooks/useSEO';
 
 const Services = () => {
+  useSEO({
+    title: 'Our Services',
+    description: 'Explore Yashraj Business Group\'s integrated business solutions: security guards, housekeeping, facility management, manpower supply, compliance, and taxation services.'
+  });
   return (
     <div className="w-full">
       {/* Hero Section */}
