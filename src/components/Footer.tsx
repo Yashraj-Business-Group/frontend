@@ -49,8 +49,21 @@ const Footer: React.FC = () => {
           Email: <a href="mailto:info@yashrajbusinessgroup.com" className="hover:text-white transition-colors">info@yashrajbusinessgroup.com</a>
         </p>
       </div>
-      <div className="md:col-span-3 pt-12 border-t border-white/10 text-center text-slate-500 text-xs tracking-widest uppercase">
-        © 2024 Yashraj Business Group Pvt. Ltd. All Rights Reserved.
+      <div className="md:col-span-3 pt-12 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+        <p className="text-slate-400 tracking-wider">
+          © {new Date().getFullYear()} Yashraj Business Group Pvt. Ltd. All Rights Reserved.
+        </p>
+        <p className="text-slate-400">
+          Designed &amp; Developed by{' '}
+          <a
+            href="https://www.infernos.co.in/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[#e28743] hover:text-[#f39c12] hover:underline font-medium transition-colors"
+          >
+            Infernos IT Solutions
+          </a>
+        </p>
       </div>
     </footer>
   );
