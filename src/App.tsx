@@ -26,10 +26,15 @@ import Login from './pages/admin/Login';
 import JobApplications from './pages/admin/JobApplications';
 import ServiceRequests from './pages/admin/ServiceRequests';
 import ManageGallery from './pages/admin/ManageGallery';
+import AdminSettings from './pages/admin/Settings';
+import { ConfirmProvider } from './context/ConfirmContext';
+import { SiteLoader, RouteProgressBar } from './components/SiteLoader';
 
 function App() {
   return (
-    <>
+    <ConfirmProvider>
+      <SiteLoader />
+      <RouteProgressBar />
       <ScrollToTop />
       <Routes>
       {/* Public Routes */}
@@ -55,17 +60,17 @@ function App() {
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<AdminDashboard />} />
         <Route path="requests" element={<ServiceRequests />} />
-        <Route path="jobs" element={<JobApplications />} />
+        <Route path="jobs" element={<JobApplications defaultTab="roles" />} />
+        <Route path="applications" element={<JobApplications defaultTab="applications" />} />
         <Route path="partners" element={<AdminPartners />} />
         <Route path="gallery" element={<ManageGallery />} />
-        <Route path="users" element={<div className="p-8">Users Coming Soon</div>} />
-        <Route path="settings" element={<div className="p-8">Settings Coming Soon</div>} />
+        <Route path="settings" element={<AdminSettings />} />
         <Route path="blogs" element={<ManageBlogs />} />
         <Route path="blogs/create" element={<CreateBlog />} />
         <Route path="blogs/edit/:id" element={<EditBlog />} />
       </Route>
       </Routes>
-    </>
+    </ConfirmProvider>
   );
 }
 

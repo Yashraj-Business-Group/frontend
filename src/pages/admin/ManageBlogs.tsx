@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, Edit, Trash2, Eye, EyeOff } from 'lucide-react';
 import { supabase } from '../../supabase';
+import { useConfirm } from '../../context/ConfirmContext';
 
 const ManageBlogs = () => {
+  const confirm = useConfirm();
   const [blogs, setBlogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -38,12 +40,24 @@ const ManageBlogs = () => {
       // Update local state
       setBlogs(blogs.map(b => b.id === id ? { ...b, isPublished: !currentStatus } : b));
     } catch (err: any) {
-      alert(err.message);
+      await confirm({
+        title: 'Error',
+        message: err.message,
+        alertOnly: true,
+        variant: 'danger',
+      });
     }
   };
 
-  const deleteBlog = async (id: string) => {
-    if (!window.confirm('Are you sure you want to delete this blog?')) return;
+  const deleteBlog = async (id: string, title?: string) => {
+    const ok = await confirm({
+      title: 'Delete Blog Post',
+      message: `Are you sure you want to delete the blog post ${title ? `"${title}"` : ''}? This post will be permanently removed.`,
+      confirmText: 'Delete Blog',
+      variant: 'danger',
+      icon: 'trash',
+    });
+    if (!ok) return;
     
     try {
       const { error: deleteErr } = await supabase
@@ -53,7 +67,12 @@ const ManageBlogs = () => {
       if (deleteErr) throw deleteErr;
       setBlogs(blogs.filter(b => b.id !== id));
     } catch (err: any) {
-      alert(err.message);
+      await confirm({
+        title: 'Error',
+        message: err.message,
+        alertOnly: true,
+        variant: 'danger',
+      });
     }
   };
 
@@ -61,7 +80,7 @@ const ManageBlogs = () => {
   if (error) return <div className="p-8 text-red-500">{error}</div>;
 
   return (
-    <div className="max-w-6xl space-y-8 animate-in fade-in slide-in-from-bottom-4">
+    <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-4">
       <div className="flex justify-between items-end">
         <div>
           <h1 className="text-3xl font-headline font-bold text-slate-800">Manage Blogs</h1>
@@ -76,7 +95,8 @@ const ManageBlogs = () => {
       </div>
 
       <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
-        <table className="w-full text-left border-collapse">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-slate-50 border-b border-slate-200 text-slate-600 text-sm">
               <th className="p-4 font-bold">Title</th>
@@ -140,6 +160,7 @@ const ManageBlogs = () => {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );

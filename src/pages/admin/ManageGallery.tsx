@@ -3,6 +3,7 @@ import { Plus, Trash2, Edit2, Image as ImageIcon, Upload, X, Save, AlertCircle }
 import { supabase } from '../../supabase';
 import { validateFile, IMAGE_UPLOAD_RULES } from '../../utils/validateFile';
 import { sanitizeFields } from '../../utils/sanitizeText';
+import { useConfirm } from '../../context/ConfirmContext';
 
 interface GalleryItem {
   id: string;
@@ -23,6 +24,7 @@ const PREDEFINED_CATEGORIES = [
 ];
 
 const ManageGallery = () => {
+  const confirm = useConfirm();
   const [items, setItems] = useState<GalleryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -194,7 +196,14 @@ const ManageGallery = () => {
   };
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm('Are you sure you want to delete this gallery item?')) return;
+    const ok = await confirm({
+      title: 'Delete Gallery Item',
+      message: 'Are you sure you want to delete this gallery item? It will be permanently removed from the website gallery.',
+      confirmText: 'Delete Item',
+      variant: 'danger',
+      icon: 'trash',
+    });
+    if (!ok) return;
 
     try {
       const { error: deleteErr } = await supabase
@@ -215,7 +224,7 @@ const ManageGallery = () => {
   };
 
   return (
-    <div className="max-w-6xl space-y-8 animate-in fade-in slide-in-from-bottom-4">
+    <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-4">
       {/* Header */}
       <div className="flex justify-between items-end">
         <div>

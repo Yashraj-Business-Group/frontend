@@ -1,6 +1,7 @@
 import React from 'react';
 import { supabase } from '../supabase';
 import { sanitizeFields } from '../utils/sanitizeText';
+import { isSpamSubmission } from '../utils/spamFilter';
 import { useSEO } from '../hooks/useSEO';
 import Honeypot from '../components/Honeypot';
 import { useRateLimit, formatRetryAfter } from '../hooks/useRateLimit';
@@ -42,6 +43,24 @@ const Contact = () => {
     setIsSubmitting(true);
     setSubmitStatus('idle');
     setErrorMessage('');
+
+    // Pattern filter to reject automated bot spam and random mixed-case gibberish
+    const spamCheck = isSpamSubmission(formData);
+    if (spamCheck.isSpam) {
+      // Shadow-drop the bot submission without inserting into the database
+      setIsSubmitting(false);
+      setSubmitStatus('success');
+      setFormData({
+        fullName: '',
+        companyName: '',
+        email: '',
+        phoneNumber: '',
+        serviceRequired: '',
+        additionalReqs: ''
+      });
+      setTimeout(() => setSubmitStatus('idle'), 5000);
+      return;
+    }
 
     try {
       recordAttempt();

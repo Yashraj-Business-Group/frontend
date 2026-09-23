@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabase';
 import { validateFile, RESUME_UPLOAD_RULES } from '../utils/validateFile';
 import { sanitizeFields } from '../utils/sanitizeText';
+import { isSpamSubmission } from '../utils/spamFilter';
 import Honeypot from '../components/Honeypot';
 import { useSEO } from '../hooks/useSEO';
 import { useRateLimit, formatRetryAfter } from '../hooks/useRateLimit';
@@ -94,6 +95,18 @@ const JobPortal = () => {
     }
 
     setSubmitting(true);
+
+    const spamCheck = isSpamSubmission({
+      fullName: formData.fullName,
+      email: formData.email,
+      phoneNumber: formData.phoneNumber
+    });
+    if (spamCheck.isSpam) {
+      setSubmitting(false);
+      alert(`Application for ${selectedJob.title} submitted successfully!`);
+      closeModal();
+      return;
+    }
 
     try {
       recordAttempt();

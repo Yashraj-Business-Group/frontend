@@ -64,6 +64,16 @@
     from { transform: translateX(0); }
     to { transform: translateX(-100%); }
   }
+
+  @keyframes shimmer {
+    100% { transform: translateX(200%); }
+  }
+
+  @keyframes routeProgress {
+    0% { transform: scaleX(0); transform-origin: left; }
+    70% { transform: scaleX(0.8); transform-origin: left; }
+    100% { transform: scaleX(1); transform-origin: left; }
+  }
 }
 
 @layer base {

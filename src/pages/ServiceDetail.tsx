@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { Shield, Droplets, Building2, Users, FileSignature, Landmark, Calculator, ArrowRight, BadgeCheck, ZoomIn, X, CheckCircle } from 'lucide-react';
 import { supabase } from '../supabase';
 import { sanitizeFields } from '../utils/sanitizeText';
+import { isSpamSubmission } from '../utils/spamFilter';
 import { useSEO } from '../hooks/useSEO';
 import Honeypot from '../components/Honeypot';
 import { useRateLimit, formatRetryAfter } from '../hooks/useRateLimit';
@@ -181,6 +182,17 @@ const ServiceDetail = () => {
     }
 
     setIsSubmitting(true);
+
+    const spamCheck = isSpamSubmission({
+      ...formData,
+      serviceRequired: service.title
+    });
+    if (spamCheck.isSpam) {
+      setIsSubmitting(false);
+      alert(`Quotation requested for ${service.title}! We will contact you soon.`);
+      setFormData({ fullName: '', companyName: '', email: '', phoneNumber: '+91 ', additionalReqs: '' });
+      return;
+    }
 
     try {
       recordAttempt();

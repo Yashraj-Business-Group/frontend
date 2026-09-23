@@ -130,7 +130,7 @@ const AdminDashboard = () => {
         <div className="bg-white rounded-lg shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
             <h2 className="font-headline font-bold text-lg text-slate-800">Recent Job Applications</h2>
-            <Link to="/admin/jobs" className="text-sm text-primary font-bold hover:underline">View All</Link>
+            <Link to="/admin/applications" className="text-sm text-primary font-bold hover:underline">View All</Link>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm text-slate-600">
